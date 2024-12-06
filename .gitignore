@@ -1,7 +1,7 @@
 .idea
+.vscode/
 out
 .mvn
 target
 venv
 __pycache__
-
