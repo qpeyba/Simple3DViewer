@@ -50,11 +50,11 @@
             <systemPath>${project.basedir}/lib/ObjWriter-1.0-SNAPSHOT.jar</systemPath>
         </dependency>
         <dependency>
-            <groupId>ObjReader.jestokanov_d</groupId>
+            <groupId>io.github.shimeoki</groupId>
             <artifactId>jshaper</artifactId>
-            <version>1.0</version>
+            <version>0.15.0</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/gradle-wrapper.jar</systemPath>
+            <systemPath>${project.basedir}/lib/jshaper-0.15.0.jar</systemPath>
         </dependency>
     </dependencies>
 
