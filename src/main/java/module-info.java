@@ -3,6 +3,7 @@ module com.cgvsu {
     requires javafx.fxml;
     requires vecmath;
     requires java.desktop;
+    requires io.github.shimeoki.jshaper;
 
 
     opens com.cgvsu to javafx.fxml;
