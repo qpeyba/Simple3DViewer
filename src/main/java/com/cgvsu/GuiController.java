@@ -18,7 +18,8 @@ import java.io.File;
 import javax.vecmath.Vector3f;
 
 import com.cgvsu.model.Model;
-import com.cgvsu.objreader.ObjReader;
+import com.cgvsu.obj_io.reader.ObjReader;
+import com.cgvsu.obj_io.writer.ObjWriter;
 import com.cgvsu.render_engine.Camera;
 
 public class GuiController {
@@ -114,5 +115,26 @@ public class GuiController {
     @FXML
     public void handleCameraDown(ActionEvent actionEvent) {
         camera.movePosition(new Vector3f(0, -TRANSLATION, 0));
+    }
+
+    @FXML
+    private void onSaveModelMenuItemClick() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(
+            new FileChooser.ExtensionFilter("Model (*.obj)", "*.obj")
+        );
+        fileChooser.setTitle("Save Model");
+    
+        File file = fileChooser.showSaveDialog((Stage) canvas.getScene().getWindow());
+        if (file == null) {
+            return;
+        }
+    
+        try {
+            ObjWriter writer = new ObjWriter();
+            writer.write(mesh, file.getAbsolutePath());
+        } catch (Exception e) {
+            System.out.println("Error saving file: " + e.getMessage());
+        }
     }
 }
