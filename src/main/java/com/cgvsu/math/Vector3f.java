@@ -2,7 +2,7 @@ package com.cgvsu.math;
 
 import java.util.Objects;
 
-public class Vector3f {
+public class Vector3f implements Cloneable {
     public Vector3f(float x, float y, float z) {
         this.x = x;
         this.y = y;
@@ -27,6 +27,17 @@ public class Vector3f {
     public float getZ() {
         return z;
     }
+
+    /** Для удаления вершин /VerDel **/
+    @Override
+    public Vector3f clone()  {
+        try {
+            return (Vector3f) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    /** VerDel\ **/
 
     @Override
     public boolean equals(Object o) {
