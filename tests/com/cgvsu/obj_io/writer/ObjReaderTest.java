@@ -22,33 +22,33 @@ class ObjReaderTest {
         Assertions.assertTrue(result.equals(expectedResult));
     }
 
-    // todo: Update remaining tests to use new library for ObjReader
-/*    @Test
+    @Test
     public void testParseVertex02() {
-        ArrayList<String> wordsInLineWithoutToken = new ArrayList<>(Arrays.asList("1.01", "1.02", "1.03"));
-        Vector3f result = ObjReader.parseVertex(wordsInLineWithoutToken, 5);
+        String objVer = "v 1.01 1.02 1.03";
+        Model model = ObjReader.read(objVer);
+        Vector3f result = model.vertices.get(0);
         Vector3f expectedResult = new Vector3f(1.01f, 1.02f, 1.10f);
         Assertions.assertFalse(result.equals(expectedResult));
     }
 
     @Test
     public void testParseVertex03() {
-        ArrayList<String> wordsInLineWithoutToken = new ArrayList<>(Arrays.asList("ab", "o", "ba"));
+        String objVer = "v ab o ba";
         try {
-            ObjReader.parseVertex(wordsInLineWithoutToken, 10);
+            Model model = ObjReader.read(objVer);
         } catch (ObjReaderException exception) {
-            String expectedError = "Error parsing OBJ file on line: 10. Failed to parse float value.";
+            String expectedError = "Error parsing OBJ file on line: 0. jshaper: parse: invalid float format";
             Assertions.assertEquals(expectedError, exception.getMessage());
         }
     }
 
     @Test
     public void testParseVertex04() {
-        ArrayList<String> wordsInLineWithoutToken = new ArrayList<>(Arrays.asList("1.0", "2.0"));
+        String objVer = "v 1.0 2.0";
         try {
-            ObjReader.parseVertex(wordsInLineWithoutToken, 10);
+            Model model = ObjReader.read(objVer);
         } catch (ObjReaderException exception) {
-            String expectedError = "Error parsing OBJ file on line: 10. Too few vertex arguments.";
+            String expectedError = "Error parsing OBJ file on line: 0. jshaper: parse: invalid vertex format";
             Assertions.assertEquals(expectedError, exception.getMessage());
         }
     }
@@ -58,15 +58,18 @@ class ObjReaderTest {
         // АГААА! Вот тест, который говорит, что у метода нет проверки на более, чем 3 числа
         // А такой случай лучше не игнорировать, а сообщать пользователю, что у него что-то не так
         // ассерт, чтобы не забыть про тест:
-        Assertions.assertTrue(false);
+
+        /** Ответ: Используемая библиотека jshaper поддерживает 4D вершины, поэтому тест теперь имеет другой смысл **/
 
 
-        ArrayList<String> wordsInLineWithoutToken = new ArrayList<>(Arrays.asList("1.0", "2.0", "3.0", "4.0"));
+        String objVer = "v 1.0 2.0 3.0 4.0";
         try {
-            ObjReader.parseVertex(wordsInLineWithoutToken, 10);
+            Model model = ObjReader.read(objVer);
         } catch (ObjReaderException exception) {
-            String expectedError = "";
+            String expectedError = "THERE'S NO ERROR, BECAUSE THE LIBRARY ACTUALLY SUPPORTS 4D VERTICES, LOL";
             Assertions.assertEquals(expectedError, exception.getMessage());
+
+            Assertions.fail("Exception was thrown, but 4D vertices should be supported."); // Для облегчения понимания, при ошибке
         }
-    }*/
+    }
 }
