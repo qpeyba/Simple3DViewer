@@ -2,11 +2,13 @@ package com.cgvsu.render_engine;
 
 import java.util.ArrayList;
 
-import com.cgvsu.math.Vector3f;
+//import com.cgvsu.math.Vector3f;
+import io.github.alphameo.linear_algebra.mat.*;
 import javafx.scene.canvas.GraphicsContext;
-import javax.vecmath.*;
+//import javax.vecmath.*;
 import com.cgvsu.model.Model;
-import static com.cgvsu.render_engine.GraphicConveyor.*;
+//import static com.cgvsu.render_engine.GraphicConveyor.*;
+import com.cgvsu.math.affine.*;
 
 public class RenderEngine {
 
@@ -17,7 +19,7 @@ public class RenderEngine {
             final int width,
             final int height)
     {
-        Matrix4f modelMatrix = rotateScaleTranslate();
+        Matrix4 modelMatrix = Transformation();
         Matrix4f viewMatrix = camera.getViewMatrix();
         Matrix4f projectionMatrix = camera.getProjectionMatrix();
 
