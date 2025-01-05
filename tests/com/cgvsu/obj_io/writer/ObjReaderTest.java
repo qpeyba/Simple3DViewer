@@ -5,6 +5,8 @@ import com.cgvsu.model.Model;
 import com.cgvsu.obj_io.reader.ObjReader;
 import com.cgvsu.obj_io.reader.ObjReaderException;
 
+import io.github.alphameo.linear_algebra.vec.Vec3;
+import io.github.alphameo.linear_algebra.vec.Vector3;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -17,8 +19,8 @@ class ObjReaderTest {
     public void testParseVertex01() {
         String objVer = "v 1.01 1.02 1.03";
         Model model = ObjReader.read(objVer);
-        Vector3f result = model.vertices.get(0);
-        Vector3f expectedResult = new Vector3f(1.01f, 1.02f, 1.03f);
+        Vector3 result = model.vertices.get(0);
+        Vector3 expectedResult = new Vec3(1.01f, 1.02f, 1.03f);
         Assertions.assertTrue(result.equals(expectedResult));
     }
 
@@ -26,8 +28,8 @@ class ObjReaderTest {
     public void testParseVertex02() {
         String objVer = "v 1.01 1.02 1.03";
         Model model = ObjReader.read(objVer);
-        Vector3f result = model.vertices.get(0);
-        Vector3f expectedResult = new Vector3f(1.01f, 1.02f, 1.10f);
+        Vector3 result = model.vertices.get(0);
+        Vector3 expectedResult = new Vec3(1.01f, 1.02f, 1.10f);
         Assertions.assertFalse(result.equals(expectedResult));
     }
 

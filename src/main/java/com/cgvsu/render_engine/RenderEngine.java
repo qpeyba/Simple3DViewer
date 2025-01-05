@@ -1,16 +1,13 @@
 package com.cgvsu.render_engine;
 
-import java.util.ArrayList;
-
-//import com.cgvsu.math.Vector3f;
-import com.cgvsu.math.Vector3f;
-import io.github.alphameo.linear_algebra.mat.*;
+import com.cgvsu.math.affine.AffineTransformation;
+import com.cgvsu.math.affine.Transformation;
+import com.cgvsu.model.Model;
+import io.github.alphameo.linear_algebra.mat.Mat4;
+import io.github.alphameo.linear_algebra.mat.Mat4Math;
+import io.github.alphameo.linear_algebra.mat.Matrix4;
 import io.github.alphameo.linear_algebra.vec.*;
 import javafx.scene.canvas.GraphicsContext;
-//import javax.vecmath.*;
-import com.cgvsu.model.Model;
-//import static com.cgvsu.render_engine.GraphicConveyor.*;
-import com.cgvsu.math.affine.*;
 
 import static com.cgvsu.render_engine.GraphicConveyor.vertexToPoint;
 
