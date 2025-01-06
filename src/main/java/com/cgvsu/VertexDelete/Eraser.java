@@ -7,7 +7,7 @@ import com.cgvsu.model.Polygon;
 
 import java.util.*;
 
-public class EraserV2 {
+public class Eraser {
     public static Model vertexDelete(Model model, List<Integer> index, boolean new_file, boolean hanging_NormalIndices, boolean hanging_TexturelIndices, boolean hanging_polygons) {
         Model modelrez = new Model();
         Map<Integer, Integer> connectionVertexIndices = new HashMap<>();
