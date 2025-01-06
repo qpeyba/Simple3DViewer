@@ -1,7 +1,26 @@
-.idea
+# IDE files
+.idea/
 .vscode/
-out
-.mvn
-target
-venv
-__pycache__
+*.iml
+.project
+.classpath
+.settings/
+
+# Build output
+target/
+out/
+build/
+
+# Maven
+.mvn/
+mvnw
+mvnw.cmd
+
+# Misc
+*.log
+*.swp
+.DS_Store
+
+# Python-related (if needed)
+venv/
+__pycache__/
