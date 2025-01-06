@@ -12,7 +12,6 @@ import javafx.scene.canvas.GraphicsContext;
 import static com.cgvsu.render_engine.GraphicConveyor.vertexToPoint;
 
 public class RenderEngine {
-    private Vector3[] resultPoints;
 
     public static void render(
             final GraphicsContext graphicsContext,
@@ -21,7 +20,7 @@ public class RenderEngine {
             final int width,
             final int height)
     {
-        AffineTransformation modelMatrix = new Transformation(); // матрица трансформации
+        Matrix4 modelMatrix = new Transformation().getMatrix(); // матрица трансформации
         Matrix4 viewMatrix = camera.getViewMatrix(); // матрица камеры
         Matrix4 projectionMatrix = camera.getProjectionMatrix(); // матрица проекции
 
@@ -29,7 +28,7 @@ public class RenderEngine {
 //        Matrix4f viewMatrix = camera.getViewMatrix();
 //        Matrix4f projectionMatrix = camera.getProjectionMatrix();
 
-        Matrix4 modelViewProjectionMatrix = new Mat4(modelMatrix.getMatrix());
+        Matrix4 modelViewProjectionMatrix = new Mat4(modelMatrix);
         Mat4Math.prod(modelViewProjectionMatrix, viewMatrix);
         Mat4Math.prod(modelViewProjectionMatrix,projectionMatrix); // проекция модели
 
