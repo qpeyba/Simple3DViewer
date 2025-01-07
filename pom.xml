@@ -50,6 +50,11 @@
             <scope>system</scope>
             <systemPath>${project.basedir}/libs/jshaper-0.15.0.jar</systemPath>
         </dependency>
+        <dependency>
+            <groupId>io.github.alphameo</groupId>
+            <artifactId>linear_algebra</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
 
     <build>
