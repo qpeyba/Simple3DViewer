@@ -2,7 +2,7 @@ package com.cgvsu.math;
 
 import java.util.Objects;
 
-public class Vector2f {
+public class Vector2f implements Cloneable {
     public Vector2f(float x, float y) {
         this.x = x;
         this.y = y;
@@ -17,7 +17,16 @@ public class Vector2f {
     public float getY() {
         return y;
     }
-
+    /** Для удаления вершин /VerDel **/
+    @Override
+    public Vector2f clone()  {
+        try {
+            return (Vector2f) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    /** VerDel\ **/
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
