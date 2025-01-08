@@ -91,4 +91,9 @@ public class Vector3f implements Cloneable {
     public int hashCode() {
         return Objects.hash(x, y, z);
     }
+
+    @Override
+    public String toString() {
+        return String.format("(%.2f, %.2f, %.2f)", x, y, z);
+    }
 }
