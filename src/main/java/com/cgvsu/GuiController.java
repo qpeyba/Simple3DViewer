@@ -104,6 +104,31 @@ public class GuiController {
     }
 
     @FXML
+    private void onSaveModelMenuItemClick() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(
+            new FileChooser.ExtensionFilter("Model (*.obj)", "*.obj")
+        );
+        fileChooser.setTitle("Save Model");
+    
+        File file = fileChooser.showSaveDialog((Stage) canvas.getScene().getWindow());
+        if (file == null) {
+            return;
+        }
+
+        if (mesh == null) {
+            showError("Save Error", "No model loaded to save");
+            return;
+        }
+        try {
+            ObjWriter writer = new ObjWriter();
+            writer.write(mesh, file.getAbsolutePath());
+        } catch (Exception e) {
+            showError("Save Error", "Error saving file: " + e.getMessage());
+        }
+    }
+
+    @FXML
     public void handleCameraForward(ActionEvent actionEvent) {
         camera.movePosition(new Vector3f(0, 0, -TRANSLATION));
     }
@@ -133,26 +158,7 @@ public class GuiController {
         camera.movePosition(new Vector3f(0, -TRANSLATION, 0));
     }
 
-    @FXML
-    private void onSaveModelMenuItemClick() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(
-            new FileChooser.ExtensionFilter("Model (*.obj)", "*.obj")
-        );
-        fileChooser.setTitle("Save Model");
-    
-        File file = fileChooser.showSaveDialog((Stage) canvas.getScene().getWindow());
-        if (file == null) {
-            return;
-        }
-    
-        try {
-            ObjWriter writer = new ObjWriter();
-            writer.write(mesh, file.getAbsolutePath());
-        } catch (Exception e) {
-            System.out.println("Error saving file: " + e.getMessage());
-        }
-    }
+
     @FXML
     private TextField VerticesToRemove;
     @FXML
