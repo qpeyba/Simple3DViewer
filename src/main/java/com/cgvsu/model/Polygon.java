@@ -69,6 +69,45 @@ public class Polygon implements Cloneable {
         return normalIndices;
     }
 
+    //метод триангуляции одного полигона
+    public ArrayList<Polygon> triangulate() {
+        int vertexNum = vertexIndices.size();
+        ArrayList<Polygon> triangles = new ArrayList<>();
+
+        if (vertexNum == 3) {
+            triangles.add(this);
+            return triangles;
+        }
+
+        for (int i = 1; i < vertexNum - 1; i++) {
+            Polygon triangle = new Polygon();
+
+            ArrayList<Integer> newVertexIndices = new ArrayList<>();
+            newVertexIndices.add(vertexIndices.get(0));
+            newVertexIndices.add(vertexIndices.get(i));
+            newVertexIndices.add(vertexIndices.get(i + 1));
+            triangle.setVertexIndices(newVertexIndices);
+
+            if (!textureVertexIndices.isEmpty()) {
+                ArrayList<Integer> newTextureIndices = new ArrayList<>();
+                newTextureIndices.add(textureVertexIndices.get(0));
+                newTextureIndices.add(textureVertexIndices.get(i));
+                newTextureIndices.add(textureVertexIndices.get(i + 1));
+                triangle.setTextureVertexIndices(newTextureIndices);
+            }
+
+            if (!normalIndices.isEmpty()) {
+                ArrayList<Integer> newNormalIndices = new ArrayList<>();
+                newNormalIndices.add(normalIndices.get(0));
+                newNormalIndices.add(normalIndices.get(i));
+                newNormalIndices.add(normalIndices.get(i + 1));
+                triangle.setNormalIndices(newNormalIndices);
+            }
+            triangles.add(triangle);
+        }
+        return triangles;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -3,9 +3,7 @@ package com.cgvsu.model;
 import com.cgvsu.math.Vector2f;
 import com.cgvsu.math.Vector3f;
 
-import java.util.ArrayList;
-import java.util.Locale;
-import java.util.Objects;
+import java.util.*;
 
 public class Model implements Cloneable {
 
@@ -14,6 +12,71 @@ public class Model implements Cloneable {
     public ArrayList<Vector3f> normals = new ArrayList<Vector3f>();
     public ArrayList<Polygon> polygons = new ArrayList<Polygon>();
 
+
+    public void triangulate() {
+        ArrayList<Polygon> newPolygons = new ArrayList<Polygon>();
+
+        for (Polygon polygon : polygons) {
+            newPolygons.addAll(
+                    polygon.triangulate()
+            );
+        }
+        polygons = newPolygons;
+    }
+
+
+    public void computeNormals() {
+
+        Map<Integer, Vector3f> vertexNormals = new HashMap<>();
+        Map<Integer, Integer> vertexNormalsCount = new HashMap<>();
+
+
+        for (Polygon polygon : polygons) {
+            ArrayList<Integer> vertexIndices = polygon.getVertexIndices();
+            if (vertexIndices.size() < 3) {
+                continue;
+            }
+
+            Vector3f v0 = vertices.get(vertexIndices.get(0));
+            Vector3f v1 = vertices.get(vertexIndices.get(1));
+            Vector3f v2 = vertices.get(vertexIndices.get(2));
+
+            Vector3f edge1 = v1.subtract(v0);
+            Vector3f edge2 = v2.subtract(v0);
+            Vector3f faceNormal = edge1.cross(edge2).normalize();
+
+            for (int index : vertexIndices) {
+                vertexNormals.compute(index, (k, v) -> {
+                    if (v == null) {
+                        return faceNormal.copy();
+                    } else {
+                        return v.add(faceNormal);
+                    }
+                });
+            }
+
+            for (int index : vertexIndices) {
+
+                if (vertexNormalsCount.containsKey(index)) {
+                    vertexNormalsCount.put(index, vertexNormalsCount.get(index) + 1);
+                } else {
+                    vertexNormalsCount.put(index, 1);
+                }
+
+            }
+        }
+
+
+        for (Integer index : vertexNormals.keySet()) {
+            vertexNormals.put(index, vertexNormals.get(index).divide(vertexNormalsCount.get(index)));
+        }
+
+
+        normals = new ArrayList<>();
+        for (int i = 0; i < vertices.size(); i++) {
+            normals.add(vertexNormals.getOrDefault(i, new Vector3f(0, 0, 0)));
+        }
+    }
 
     /** Для удаления вершин /VerDel **/
         public Model() {
