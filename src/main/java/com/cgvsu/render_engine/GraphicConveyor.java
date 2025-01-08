@@ -22,8 +22,8 @@ public class GraphicConveyor { // not to be used
 
     public static Matrix4 lookAt(Vector3 eye, Vector3 target, Vector3 up) {
         Vector3 resultZ = Vec3Math.subtracted(target, eye);
-        Vector3 resultX = Vec3Math.cross(up, resultZ);
-        Vector3 resultY = Vec3Math.cross(resultZ, resultX);
+        Vector3 resultX = Vec3Math.cross(resultZ, up);
+        Vector3 resultY = Vec3Math.cross(resultX, resultZ);
 
         Vec3Math.normalize(resultX);
         Vec3Math.normalize(resultY);
