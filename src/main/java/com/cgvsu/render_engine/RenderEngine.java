@@ -1,15 +1,12 @@
 package com.cgvsu.render_engine;
 
-import com.cgvsu.math.affine.AffineTransformation;
-import com.cgvsu.math.affine.Transformation;
-import com.cgvsu.model.Model;
-import io.github.alphameo.linear_algebra.mat.Mat4;
-import io.github.alphameo.linear_algebra.mat.Mat4Math;
-import io.github.alphameo.linear_algebra.mat.Matrix4;
-import io.github.alphameo.linear_algebra.vec.*;
-import javafx.scene.canvas.GraphicsContext;
+import java.util.ArrayList;
 
-import static com.cgvsu.render_engine.GraphicConveyor.vertexToPoint;
+import com.cgvsu.math.Vector3f;
+import javafx.scene.canvas.GraphicsContext;
+import javax.vecmath.*;
+import com.cgvsu.model.Model;
+import static com.cgvsu.render_engine.GraphicConveyor.*;
 
 public class RenderEngine {
 
@@ -20,40 +17,42 @@ public class RenderEngine {
             final int width,
             final int height)
     {
-        Matrix4 modelMatrix = new Transformation().getMatrix(); // матрица трансформации
-        Matrix4 viewMatrix = camera.getViewMatrix(); // матрица камеры
-        Matrix4 projectionMatrix = camera.getProjectionMatrix(); // матрица проекции
+        Matrix4f modelMatrix = rotateScaleTranslate();
+        Matrix4f viewMatrix = camera.getViewMatrix();
+        Matrix4f projectionMatrix = camera.getProjectionMatrix();
 
-//        Matrix4 modelMatrix = rotateScaleTranslate();
-//        Matrix4f viewMatrix = camera.getViewMatrix();
-//        Matrix4f projectionMatrix = camera.getProjectionMatrix();
+        Matrix4f modelViewProjectionMatrix = new Matrix4f(modelMatrix);
+        modelViewProjectionMatrix.mul(viewMatrix);
+        modelViewProjectionMatrix.mul(projectionMatrix);
 
-        Matrix4 modelViewProjectionMatrix = new Mat4(modelMatrix);
-        Mat4Math.prod(modelViewProjectionMatrix, viewMatrix);
-        Mat4Math.prod(modelViewProjectionMatrix,projectionMatrix); // проекция модели
+        final int nPolygons = mesh.polygons.size();
+        for (int polygonInd = 0; polygonInd < nPolygons; ++polygonInd) {
+            final int nVerticesInPolygon = mesh.polygons.get(polygonInd).getVertexIndices().size();
 
-        Vector3[] resultPoints = new Vec3[mesh.vertices.size()];
-        Vector4 vertex4;
-        Vector3 vertex, projectedVertex;
-        Vector2 resultPoint;
-        for (int i = 0; i < mesh.vertices.size(); i++) {
-            vertex = mesh.vertices.get(i);
+            ArrayList<Point2f> resultPoints = new ArrayList<>();
+            for (int vertexInPolygonInd = 0; vertexInPolygonInd < nVerticesInPolygon; ++vertexInPolygonInd) {
+                Vector3f vertex = mesh.vertices.get(mesh.polygons.get(polygonInd).getVertexIndices().get(vertexInPolygonInd));
 
-            // project vertices
-            vertex4 = Mat4Math.prod(modelViewProjectionMatrix,
-                    new Vec4(vertex.x(), vertex.y(), vertex.z(), 1.0f)
-            );
-            projectedVertex = new Vec3(
-                    vertex4.x() / vertex4.w(),
-                    vertex4.y() / vertex4.w(),
-                    vertex4.z() / vertex4.w()
-            );
-            resultPoint = vertexToPoint(projectedVertex, width, height);
-            resultPoints[i] = new Vec3(resultPoint.x(), resultPoint.y(), projectedVertex.z());
+                javax.vecmath.Vector3f vertexVecmath = new javax.vecmath.Vector3f(vertex.getX(), vertex.getY(), vertex.getZ());
 
-//            //project normals
-//            normal4 = modelMatrix.multiplyMV(new Vector4f(normal.x(), normal.y(), normal.z(), 1.0f));
-//            normals[i] = new Vector3f(normal4.x(), normal4.y(), normal4.z());
+                Point2f resultPoint = vertexToPoint(multiplyMatrix4ByVector3(modelViewProjectionMatrix, vertexVecmath), width, height);
+                resultPoints.add(resultPoint);
+            }
+
+            for (int vertexInPolygonInd = 1; vertexInPolygonInd < nVerticesInPolygon; ++vertexInPolygonInd) {
+                graphicsContext.strokeLine(
+                        resultPoints.get(vertexInPolygonInd - 1).x,
+                        resultPoints.get(vertexInPolygonInd - 1).y,
+                        resultPoints.get(vertexInPolygonInd).x,
+                        resultPoints.get(vertexInPolygonInd).y);
+            }
+
+            if (nVerticesInPolygon > 0)
+                graphicsContext.strokeLine(
+                        resultPoints.get(nVerticesInPolygon - 1).x,
+                        resultPoints.get(nVerticesInPolygon - 1).y,
+                        resultPoints.get(0).x,
+                        resultPoints.get(0).y);
         }
     }
 }
