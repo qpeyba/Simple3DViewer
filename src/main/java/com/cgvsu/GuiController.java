@@ -225,4 +225,18 @@ public class GuiController {
         alert.setContentText(content);
         alert.showAndWait();
     }
+
+    @FXML
+    private TextField inputForModelMoving;
+
+    @FXML
+    private TextField inputForModelRotation;
+
+    @FXML
+    private TextField inputForModelScaling;
+
+    @FXML
+    void applyTransformation(MouseEvent event) {
+
+    }
 }

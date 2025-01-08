@@ -114,12 +114,12 @@
                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="167.0" prefWidth="204.0">
                         <children>
                            <Label layoutX="8.0" layoutY="6.0" text="Input for model scaling" />
-                           <TextField fx:id="VerticesToRemove1" layoutX="4.0" layoutY="30.0" />
+                           <TextField fx:id="inputForModelScaling" layoutX="4.0" layoutY="30.0" />
                            <Label layoutX="8.0" layoutY="59.0" text="Input for model rotation" />
-                           <TextField fx:id="VerticesToRemove11" layoutX="4.0" layoutY="83.0" />
+                           <TextField fx:id="inputForModelRotation" layoutX="4.0" layoutY="83.0" />
                            <Label layoutX="8.0" layoutY="112.0" text="Input for model moving" />
-                           <TextField fx:id="VerticesToRemove111" layoutX="4.0" layoutY="136.0" />
-                           <Button layoutX="109.0" layoutY="80.0" mnemonicParsing="false" onMouseClicked="#ApplyTransformation" prefHeight="32.0" prefWidth="131.0" rotate="90.0" text="ОКЭЙ">
+                           <TextField fx:id="inputForModelMoving" layoutX="4.0" layoutY="136.0" />
+                           <Button layoutX="109.0" layoutY="80.0" mnemonicParsing="false" onMouseClicked="#applyTransformation" prefHeight="32.0" prefWidth="131.0" rotate="90.0" text="ОКЭЙ">
                               <cursor>
                                  <Cursor fx:constant="HAND" />
                               </cursor>
