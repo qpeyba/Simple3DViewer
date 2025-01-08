@@ -63,13 +63,18 @@ public class GraphicConveyor { // not to be used
     }
 
     // ВОЗМОЖНА ПРОБЛЕМА
-    public static Vec3 multiplyMatrix4ByVector3(final Matrix4 matrix, final Vector3 vertex) {
-        Mat4Math.transpose(matrix); //?
-        final float x = (vertex.x() * matrix.get(0, 0)) + (vertex.y() * matrix.get(1, 0)) + (vertex.z() * matrix.get(2, 0)) + matrix.get(3, 0);
-        final float y = (vertex.x() * matrix.get(0, 1)) + (vertex.y() * matrix.get(1, 1)) + (vertex.z() * matrix.get(2, 1)) + matrix.get(3, 1);
-        final float z = (vertex.x() * matrix.get(0, 2)) + (vertex.y() * matrix.get(1, 2)) + (vertex.z() * matrix.get(2, 2)) + matrix.get(3, 2);
-        final float w = (vertex.x() * matrix.get(0, 3)) + (vertex.y() * matrix.get(1, 3)) + (vertex.z() * matrix.get(2, 3)) + matrix.get(3, 3);
-        return new Vec3(x / w, y / w, z / w);
+//    public static Vec3 multiplyMatrix4ByVector3(final Matrix4 matrix, final Vector3 vertex) {
+//        Mat4Math.transpose(matrix); //?
+//        final float x = (vertex.x() * matrix.get(0, 0)) + (vertex.y() * matrix.get(1, 0)) + (vertex.z() * matrix.get(2, 0)) + matrix.get(3, 0);
+//        final float y = (vertex.x() * matrix.get(0, 1)) + (vertex.y() * matrix.get(1, 1)) + (vertex.z() * matrix.get(2, 1)) + matrix.get(3, 1);
+//        final float z = (vertex.x() * matrix.get(0, 2)) + (vertex.y() * matrix.get(1, 2)) + (vertex.z() * matrix.get(2, 2)) + matrix.get(3, 2);
+//        final float w = (vertex.x() * matrix.get(0, 3)) + (vertex.y() * matrix.get(1, 3)) + (vertex.z() * matrix.get(2, 3)) + matrix.get(3, 3);
+//        return new Vec3(x / w, y / w, z / w);
+//    }
+    public static Vector3 multiplyMatrix4ByVector3(final Matrix4 matrix, final Vector3 vertex) {
+        Vector4 resVertex = Mat4Math.prod(matrix, Vec3Math.toVec4(vertex));
+        Vec4Math.divide(resVertex, resVertex.w());
+        return new Vec3(resVertex.x(), resVertex.y(), resVertex.z());
     }
 
     public static Vec2 vertexToPoint(final Vector3 vertex, final int width, final int height) {
