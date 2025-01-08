@@ -4,8 +4,9 @@ module com.cgvsu {
     requires vecmath;
     requires java.desktop;
     requires io.github.shimeoki.jshaper;
+    requires javafx.graphics;
     requires transitive io.github.alphameo.linear_algebra;
-
+  
 
     opens com.cgvsu to javafx.fxml;
     exports com.cgvsu;
