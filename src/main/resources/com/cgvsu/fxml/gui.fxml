@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.control.Accordion?>
 <?import javafx.scene.control.Button?>
@@ -13,6 +14,7 @@
 <?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
 <AnchorPane fx:id="anchorPane" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cgvsu.GuiController">
@@ -28,9 +30,10 @@
          <MenuItem mnemonicParsing="false" onAction="#onSaveModelMenuItemClick" text="Save Model">
             <accelerator>
                <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-            </accelerator></MenuItem>
+            </accelerator>
+         </MenuItem>
         </Menu>
-        <Menu mnemonicParsing="false" text="Camera Options">
+        <Menu mnemonicParsing="false" text="Controls">
             <MenuItem mnemonicParsing="false" onAction="#handleCameraForward" text="Forward">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="W" control="UP" meta="UP" shift="UP" shortcut="UP" />
@@ -65,26 +68,74 @@
     </MenuBar>
    <Pane layoutX="-1.0" layoutY="27.0" prefHeight="693.0" prefWidth="206.0">
       <children>
-         <Accordion layoutX="2.0" layoutY="103.0" />
-       <TitledPane animated="false" prefHeight="165.0" prefWidth="206.0" text="Vertex Remover">
-         <content>
-           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="167.0" prefWidth="204.0">
-                  <children>
-                     <Label layoutX="8.0" layoutY="6.0" text="Select Vertices to remove" />
-                     <TextField fx:id="VerticesToRemove" layoutX="4.0" layoutY="30.0" />
-                     <Button fx:id="vertexRemoverButton" layoutX="159.0" layoutY="30.0" mnemonicParsing="false" text="OK" />
-                     <Text layoutX="8.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Create new model:" />
-                     <CheckBox fx:id="checkboxNewFile" layoutX="168.0" layoutY="60.0" mnemonicParsing="false" />
-                     <Text layoutX="8.0" layoutY="90.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Remove normals:" />
-                     <CheckBox fx:id="checkboxRemoveNormals" layoutX="168.0" layoutY="77.0" mnemonicParsing="false" />
-                     <Text layoutX="8.0" layoutY="107.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Remove Textures:" />
-                     <CheckBox fx:id="checkboxRemoveTextures" layoutX="168.0" layoutY="94.0" mnemonicParsing="false" />
-                     <Text layoutX="8.0" layoutY="124.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Remove Polygons:" />
-                     <CheckBox fx:id="checkboxRemovePolygons" layoutX="168.0" layoutY="111.0" mnemonicParsing="false" />
-                  </children>
-               </AnchorPane>
-         </content>
-       </TitledPane>
+         <Accordion>
+            <panes>
+             <TitledPane animated="false" prefHeight="165.0" prefWidth="206.0" text="Vertex Remover">
+               <content>
+                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="167.0" prefWidth="204.0">
+                        <children>
+                           <Label layoutX="8.0" layoutY="6.0" text="Select Vertices to remove" />
+                           <TextField fx:id="VerticesToRemove" layoutX="4.0" layoutY="30.0" />
+                           <Button fx:id="vertexRemoverButton" layoutX="159.0" layoutY="30.0" mnemonicParsing="false" text="OK">
+                              <cursor>
+                                 <Cursor fx:constant="HAND" />
+                              </cursor>
+                           </Button>
+                           <Text layoutX="8.0" layoutY="73.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Create new model:" />
+                           <CheckBox fx:id="checkboxNewFile" layoutX="168.0" layoutY="60.0" mnemonicParsing="false">
+                              <cursor>
+                                 <Cursor fx:constant="HAND" />
+                              </cursor>
+                           </CheckBox>
+                           <Text layoutX="8.0" layoutY="90.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Remove normals:" />
+                           <CheckBox fx:id="checkboxRemoveNormals" layoutX="168.0" layoutY="77.0" mnemonicParsing="false">
+                              <cursor>
+                                 <Cursor fx:constant="HAND" />
+                              </cursor>
+                           </CheckBox>
+                           <Text layoutX="8.0" layoutY="107.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Remove Textures:" />
+                           <CheckBox fx:id="checkboxRemoveTextures" layoutX="168.0" layoutY="94.0" mnemonicParsing="false">
+                              <cursor>
+                                 <Cursor fx:constant="HAND" />
+                              </cursor>
+                           </CheckBox>
+                           <Text layoutX="8.0" layoutY="124.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Remove Polygons:" />
+                           <CheckBox fx:id="checkboxRemovePolygons" layoutX="168.0" layoutY="111.0" mnemonicParsing="false">
+                              <cursor>
+                                 <Cursor fx:constant="HAND" />
+                              </cursor>
+                           </CheckBox>
+                        </children>
+                     </AnchorPane>
+               </content>
+             </TitledPane>
+               <TitledPane animated="false" prefHeight="205.0" prefWidth="206.0" text="Transformation">
+                  <content>
+                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="167.0" prefWidth="204.0">
+                        <children>
+                           <Label layoutX="8.0" layoutY="6.0" text="Input for model scaling" />
+                           <TextField fx:id="VerticesToRemove1" layoutX="4.0" layoutY="30.0" />
+                           <Label layoutX="8.0" layoutY="59.0" text="Input for model rotation" />
+                           <TextField fx:id="VerticesToRemove11" layoutX="4.0" layoutY="83.0" />
+                           <Label layoutX="8.0" layoutY="112.0" text="Input for model moving" />
+                           <TextField fx:id="VerticesToRemove111" layoutX="4.0" layoutY="136.0" />
+                           <Button layoutX="109.0" layoutY="80.0" mnemonicParsing="false" onMouseClicked="#ApplyTransformation" prefHeight="32.0" prefWidth="131.0" rotate="90.0" text="ОКЭЙ">
+                              <cursor>
+                                 <Cursor fx:constant="HAND" />
+                              </cursor>
+                              <font>
+                                 <Font size="15.0" />
+                              </font>
+                           </Button>
+                        </children>
+                        <cursor>
+                           <Cursor fx:constant="DEFAULT" />
+                        </cursor>
+                     </AnchorPane>
+                  </content>
+               </TitledPane>
+            </panes>
+         </Accordion>
       </children>
    </Pane>
 </AnchorPane>
