@@ -4,9 +4,7 @@ import com.cgvsu.math.Vector2f;
 import com.cgvsu.math.Vector3f;
 import io.github.alphameo.linear_algebra.vec.*;
 
-import java.util.ArrayList;
-import java.util.Locale;
-import java.util.Objects;
+import java.util.*;
 
 import static com.cgvsu.math.Vector2f.cloneVector2;
 import static com.cgvsu.math.Vector3f.*;
@@ -17,6 +15,77 @@ public class Model implements Cloneable {
     public ArrayList<Vector2> textureVertices = new ArrayList<Vector2>();
     public ArrayList<Vector3> normals = new ArrayList<Vector3>();
     public ArrayList<Polygon> polygons = new ArrayList<Polygon>();
+
+    public void triangulate() {
+        ArrayList<Polygon> newPolygons = new ArrayList<Polygon>();
+
+        for (Polygon polygon : polygons) {
+            newPolygons.addAll(
+                    polygon.triangulate()
+            );
+        }
+        polygons = newPolygons;
+    }
+
+
+    public void computeNormals() {
+
+        Map<Integer, Vector3> vertexNormals = new HashMap<>();
+        Map<Integer, Integer> vertexNormalsCount = new HashMap<>();
+
+
+        for (Polygon polygon : polygons) {
+            ArrayList<Integer> vertexIndices = polygon.getVertexIndices();
+            if (vertexIndices.size() < 3) {
+                continue;
+            }
+
+            Vector3 v0 = vertices.get(vertexIndices.get(0));
+            Vector3 v1 = vertices.get(vertexIndices.get(1));
+            Vector3 v2 = vertices.get(vertexIndices.get(2));
+
+            Vector3 edge1 = Vec3Math.sub(v1, v0);
+            Vector3 edge2 = Vec3Math.sub(v2, v0);
+            Vector3 faceNormal = Vec3Math.normalize(Vec3Math.cross(edge1, edge2));
+//            Vector3 edge1 = v1.subtract(v0);
+//            Vector3 edge2 = v2.subtract(v0);
+//            Vector3 faceNormal = edge1.cross(edge2).normalize();
+
+            for (int index : vertexIndices) {
+                vertexNormals.compute(index, (k, v) -> {
+                    if (v == null) {
+                        return cloneVector3(faceNormal);
+//                        return faceNormal.copy();
+                    } else {
+                        return Vec3Math.add(v, faceNormal);
+//                        return v.add(faceNormal);
+                    }
+                });
+            }
+
+            for (int index : vertexIndices) {
+
+                if (vertexNormalsCount.containsKey(index)) {
+                    vertexNormalsCount.put(index, vertexNormalsCount.get(index) + 1);
+                } else {
+                    vertexNormalsCount.put(index, 1);
+                }
+
+            }
+        }
+
+
+        for (Integer index : vertexNormals.keySet()) {
+            vertexNormals.put(index, Vec3Math.divide(vertexNormals.get(index), vertexNormalsCount.get(index)));
+//            vertexNormals.put(index, vertexNormals.get(index).divide(vertexNormalsCount.get(index)));
+        }
+
+
+        normals = new ArrayList<>();
+        for (int i = 0; i < vertices.size(); i++) {
+            normals.add(vertexNormals.getOrDefault(i, new Vec3(0, 0, 0)));
+        }
+    }
 
 
     /** Для удаления вершин /VerDel **/
