@@ -8,6 +8,7 @@ import io.github.alphameo.linear_algebra.vec.*;
 import io.github.alphameo.linear_algebra.vec.Vector3;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import javax.vecmath.*;
 
 import static com.cgvsu.render_engine.GraphicConveyor.*;
 
@@ -17,6 +18,12 @@ public class GraphicConveyorTest {
         Vector3 eye = new Vec3(0, 0, 100);
         Vector3 target = new Vec3(0, 0, 0);
         Vector3 up = new Vec3(0, 1.0f, 0);
+        Matrix4f mat = lookAt2(
+                new Vector3f(0, 0, 100),
+                new Vector3f(0, 0, 0),
+                new Vector3f(0, 1.0f, 0)
+        );
+        System.out.println(mat.m00);
 
         Assertions.assertTrue(Mat4Math.equals(
                 Mat4Math.transpose(lookAt1(eye, target, up)),
@@ -56,6 +63,26 @@ public class GraphicConveyorTest {
                 {resultX.z(), resultY.z(), resultZ.z(), 0},
                 {-Vec3Math.dot(resultX, eye), -Vec3Math.dot(resultY, eye), -Vec3Math.dot(resultZ, eye), 1}};
         return new Mat4(matrix);
+    }
+    public static Matrix4f lookAt2(Vector3f eye, Vector3f target, Vector3f up) {
+        Vector3f resultX = new Vector3f();
+        Vector3f resultY = new Vector3f();
+        Vector3f resultZ = new Vector3f();
+
+        resultZ.sub(target, eye);
+        resultX.cross(up, resultZ);
+        resultY.cross(resultZ, resultX);
+
+        resultX.normalize();
+        resultY.normalize();
+        resultZ.normalize();
+
+        float[] matrix = new float[]{
+                resultX.x, resultY.x, resultZ.x, 0,
+                resultX.y, resultY.y, resultZ.y, 0,
+                resultX.z, resultY.z, resultZ.z, 0,
+                -resultX.dot(eye), -resultY.dot(eye), -resultZ.dot(eye), 1};
+        return new Matrix4f(matrix);
     }
 
     public static Matrix4 perspective1(
