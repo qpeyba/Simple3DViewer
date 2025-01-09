@@ -18,12 +18,12 @@ public class GraphicConveyorTest {
         Vector3 eye = new Vec3(0, 0, 100);
         Vector3 target = new Vec3(0, 0, 0);
         Vector3 up = new Vec3(0, 1.0f, 0);
-        Matrix4f mat = lookAt2(
-                new Vector3f(0, 0, 100),
-                new Vector3f(0, 0, 0),
-                new Vector3f(0, 1.0f, 0)
-        );
-        System.out.println(mat.m00);
+//        Matrix4f mat = lookAt2(
+//                new Vector3f(0, 0, 100),
+//                new Vector3f(0, 0, 0),
+//                new Vector3f(0, 1.0f, 0)
+//        );
+//        System.out.println(mat.m00);
 
         Assertions.assertTrue(Mat4Math.equals(
                 Mat4Math.transpose(lookAt1(eye, target, up)),
@@ -41,6 +41,17 @@ public class GraphicConveyorTest {
                 Mat4Math.transpose(perspective1(fov, aspectRatio, nearPlane, farPlane)),
                 perspective(fov, aspectRatio, nearPlane, farPlane))
         );
+    }
+    @Test
+    void multiplyMatrix4ByVector3Test(){
+        Matrix4 matrix = new Mat4(0.0f, 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f, 10.0f, 11.0f, 12.0f, 13.0f, 14.0f, 15.0f);
+        Vector3 vector3 = new Vec3 (3, 6, 4);
+
+        Assertions.assertTrue(Vec3Math.equals(
+                multiplyMatrix4ByVector3(matrix, vector3),
+                multiplyMatrix4ByVector3_v2(matrix, vector3)
+        ));
+
     }
 
     //An old, correct variant of lookAt
@@ -98,5 +109,13 @@ public class GraphicConveyorTest {
         result.set(2, 3, 1.0F);
         result.set(3, 2, 2 * (nearPlane * farPlane) / (nearPlane - farPlane));
         return result;
+    }
+        public static Vec3 multiplyMatrix4ByVector3_v2(final Matrix4 matrix, final Vector3 vertex) {
+        Mat4Math.transpose(matrix); //?
+        final float x = (vertex.x() * matrix.get(0, 0)) + (vertex.y() * matrix.get(1, 0)) + (vertex.z() * matrix.get(2, 0)) + matrix.get(3, 0);
+        final float y = (vertex.x() * matrix.get(0, 1)) + (vertex.y() * matrix.get(1, 1)) + (vertex.z() * matrix.get(2, 1)) + matrix.get(3, 1);
+        final float z = (vertex.x() * matrix.get(0, 2)) + (vertex.y() * matrix.get(1, 2)) + (vertex.z() * matrix.get(2, 2)) + matrix.get(3, 2);
+        final float w = (vertex.x() * matrix.get(0, 3)) + (vertex.y() * matrix.get(1, 3)) + (vertex.z() * matrix.get(2, 3)) + matrix.get(3, 3);
+        return new Vec3(x / w, y / w, z / w);
     }
 }
