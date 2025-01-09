@@ -1,5 +1,6 @@
 package com.cgvsu;
 
+import com.cgvsu.math.affine.*;
 import com.cgvsu.model.Polygon;
 import com.cgvsu.render_engine.PolygonFiller;
 import com.cgvsu.render_engine.RenderEngine;
@@ -116,8 +117,14 @@ public class GuiController {
     private TextField inputForModelScaling;
 
     @FXML
-    void applyTransformation(MouseEvent event) {
-
+    void applyTransformation(MouseEvent event) { //to be
+//        AffineTransformation transformation = new Transformation(
+//                new Translator(xTranslate, yTranslate, zTranslate),
+//                new Rotator(zAngle, Rotator.Axis.Z),
+//                new Rotator(yAngle, Rotator.Axis.Y),
+//                new Rotator(xAngle, Rotator.Axis.X),
+//                new Scaling(xScale, yScale, zScale));
+//        mesh.vertices = new ArrayList<>(transformation.transform(mesh.vertices));
     }
 
     @FXML
