@@ -3,7 +3,9 @@ package com.cgvsu;
 import com.cgvsu.model.Polygon;
 import com.cgvsu.render_engine.PolygonFiller;
 import com.cgvsu.render_engine.RenderEngine;
+import io.github.alphameo.linear_algebra.vec.Vec2;
 import io.github.alphameo.linear_algebra.vec.Vec3;
+import io.github.alphameo.linear_algebra.vec.Vector2;
 import io.github.alphameo.linear_algebra.vec.Vector3;
 import javafx.fxml.FXML;
 import javafx.animation.Animation;
@@ -38,7 +40,7 @@ import com.cgvsu.render_engine.Camera;
 
 public class GuiController {
 
-    final private float TRANSLATION = 0.5F;
+    final private float TRANSLATION = 2F;
 
     @FXML
     AnchorPane anchorPane;
@@ -49,9 +51,13 @@ public class GuiController {
     private Model mesh = null;
 
     private Camera camera = new Camera(
-            new Vec3(0, 00, 100),
+            new Vec2((float)(Math.PI/4), (float)(Math.PI/4)),
+            1000f,
             new Vec3(0, 0, 0),
-            1.0F, 1, 0.01F, 100);
+            1.0F,
+            1,
+            0.01F,
+            100);
 
     private Timeline timeline;
     private Colorf color;
@@ -122,32 +128,32 @@ public class GuiController {
 
     @FXML
     public void handleCameraForward(ActionEvent actionEvent) {
-        camera.movePosition(new Vec3(0, 0, -TRANSLATION));
+        camera.moveDistance(-TRANSLATION);
     }
 
     @FXML
     public void handleCameraBackward(ActionEvent actionEvent) {
-        camera.movePosition(new Vec3(0, 0, TRANSLATION));
+        camera.moveDistance(TRANSLATION);
     }
 
     @FXML
     public void handleCameraLeft(ActionEvent actionEvent) {
-        camera.movePosition(new Vec3(TRANSLATION, 0, 0));
+        camera.moveRotation(new Vec2(-TRANSLATION/100, 0));
     }
 
     @FXML
     public void handleCameraRight(ActionEvent actionEvent) {
-        camera.movePosition(new Vec3(-TRANSLATION, 0, 0));
+        camera.moveRotation(new Vec2(TRANSLATION/100, 0));
     }
 
     @FXML
     public void handleCameraUp(ActionEvent actionEvent) {
-        camera.movePosition(new Vec3(0, TRANSLATION, 0));
+        camera.moveRotation(new Vec2(0, -TRANSLATION/100));
     }
 
     @FXML
     public void handleCameraDown(ActionEvent actionEvent) {
-        camera.movePosition(new Vec3(0, -TRANSLATION, 0));
+        camera.moveRotation(new Vec2(0, TRANSLATION/100));
     }
 
     @FXML
