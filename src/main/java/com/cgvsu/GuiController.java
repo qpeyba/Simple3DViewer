@@ -1,5 +1,7 @@
 package com.cgvsu;
 
+import com.cgvsu.model.Polygon;
+import com.cgvsu.render_engine.PolygonFiller;
 import com.cgvsu.render_engine.RenderEngine;
 import io.github.alphameo.linear_algebra.vec.Vec3;
 import io.github.alphameo.linear_algebra.vec.Vector3;

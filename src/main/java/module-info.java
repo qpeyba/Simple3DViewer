@@ -6,6 +6,7 @@ module com.cgvsu {
     requires io.github.shimeoki.jshaper;
     requires javafx.graphics;
     requires transitive io.github.alphameo.linear_algebra;
+    requires io.github.shimeoki.jfx.rasterization;
   
 
     opens com.cgvsu to javafx.fxml;
