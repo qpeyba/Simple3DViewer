@@ -9,6 +9,8 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser;
@@ -87,6 +89,19 @@ public class GuiController {
         } catch (IOException exception) {
 
         }
+    }
+    @FXML
+    private TextField inputForModelMoving;
+
+    @FXML
+    private TextField inputForModelRotation;
+
+    @FXML
+    private TextField inputForModelScaling;
+
+    @FXML
+    void applyTransformation(MouseEvent event) {
+
     }
 
     @FXML
