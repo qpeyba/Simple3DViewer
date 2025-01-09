@@ -1,6 +1,10 @@
 package com.cgvsu;
 
+import com.cgvsu.model.Polygon;
+import com.cgvsu.render_engine.PolygonFiller;
 import com.cgvsu.render_engine.RenderEngine;
+import com.cgvsu.render_engine.RenderEngineWithFiller;
+import io.github.shimeoki.jfx.rasterization.Colorf;
 import javafx.fxml.FXML;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -66,6 +70,8 @@ public class GuiController {
 
             if (mesh != null) {
                 RenderEngine.render(canvas.getGraphicsContext2D(), camera, mesh, (int) width, (int) height);
+                PolygonFiller.fillPolygon(canvas.getGraphicsContext2D(), camera, mesh, (int) width, (int) height, new Colorf(0.0F, 1.0F, 1.0F, 1.0F));
+
             }
         });
 
