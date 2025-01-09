@@ -1,8 +1,12 @@
 package com.cgvsu.math;
 
-import java.util.Objects;
+import io.github.alphameo.linear_algebra.vec.Vec3;
+import io.github.alphameo.linear_algebra.vec.Vector3;
 
-public class Vector3f implements Cloneable {
+import java.util.Objects;
+import java.util.Vector;
+
+public class Vector3f implements Cloneable{
     public Vector3f(float x, float y, float z) {
         this.x = x;
         this.y = y;
@@ -39,45 +43,9 @@ public class Vector3f implements Cloneable {
             throw new RuntimeException(e);
         }
     }
-
-    /**
-     * VerDel\
-     **/
-
-    //методы ниже используются для вычисления нормалей модели
-    //a = (a1, a2, a3)  b = (b1, b2, b3)
-    //a × b = (a2 * b3 - a3 * b2, a3 * b1 - a1 * b3, a1 * b2 - a2 * b1)
-    public Vector3f cross(Vector3f other) {
-        return new Vector3f(
-                y * other.z - z * other.y,
-                z * other.x - x * other.z,
-                x * other.y - y * other.x
-        );
-    }
-
-    public Vector3f normalize() {
-        float length = (float) Math.sqrt(x * x + y * y + z * z);
-        return new Vector3f(x / length, y / length, z / length);
-    }
-
-    public Vector3f add(Vector3f other) {
-        return new Vector3f(x + other.x, y + other.y, z + other.z);
-    }
-
-    public Vector3f subtract(Vector3f other) {
-        return new Vector3f(x - other.x, y - other.y, z - other.z);
-    }
-
-    public Vector3f multiply(float scalar) {
-        return new Vector3f(x * scalar, y * scalar, z * scalar);
-    }
-
-    public Vector3f divide(float scalar) {
-        return new Vector3f(x / scalar, y / scalar, z / scalar);
-    }
-
-    public Vector3f copy() {
-        return new Vector3f(this.x, this.y, this.z);
+  
+    public static Vector3 cloneVector3(Vector3 vector) {
+        return new Vec3(vector.x(), vector.y(), vector.z());
     }
 
     @Override
