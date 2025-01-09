@@ -50,7 +50,7 @@ public class GraphicConveyor { // not to be used
         Matrix4 result = new Mat4();
         float tangentMinusOnDegree = (float) (1.0F / (Math.tan(fov * 0.5F)));
         result.set(R0, C0, tangentMinusOnDegree);
-        result.set(R1, C1, tangentMinusOnDegree * 4.0F / aspectRatio);
+        result.set(R1, C1, tangentMinusOnDegree * 3 / aspectRatio);
         result.set(R2, C2, (farPlane + nearPlane) / (farPlane - nearPlane));
         result.set(R3, C2, 1.0F);
         result.set(R2, C3, 2 * (nearPlane * farPlane) / (nearPlane - farPlane));
