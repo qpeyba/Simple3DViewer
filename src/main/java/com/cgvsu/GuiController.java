@@ -73,6 +73,8 @@ public class GuiController {
 
         timeline.getKeyFrames().add(frame);
         timeline.play();
+
+        vertexRemoverButton.setOnAction(event -> handleVertexRemoval());
     }
 
     @FXML
