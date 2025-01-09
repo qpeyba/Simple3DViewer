@@ -2,14 +2,18 @@ package com.cgvsu.model;
 
 import com.cgvsu.math.Vector2f;
 import com.cgvsu.math.Vector3f;
+import io.github.alphameo.linear_algebra.vec.*;
 
 import java.util.*;
 
+import static com.cgvsu.math.Vector2f.cloneVector2;
+import static com.cgvsu.math.Vector3f.*;
+
 public class Model implements Cloneable {
 
-    public ArrayList<Vector3f> vertices = new ArrayList<Vector3f>();
-    public ArrayList<Vector2f> textureVertices = new ArrayList<Vector2f>();
-    public ArrayList<Vector3f> normals = new ArrayList<Vector3f>();
+    public ArrayList<Vector3> vertices = new ArrayList<Vector3>();
+    public ArrayList<Vector2> textureVertices = new ArrayList<Vector2>();
+    public ArrayList<Vector3> normals = new ArrayList<Vector3>();
     public ArrayList<Polygon> polygons = new ArrayList<Polygon>();
 
 
@@ -84,28 +88,28 @@ public class Model implements Cloneable {
 
 
     // Метод клонирования вершин
-    public ArrayList<Vector3f> cloneVertices() {
-        ArrayList<Vector3f> clonedVertices = new ArrayList<>();
-        for (Vector3f vertex : this.vertices) {
-            clonedVertices.add(vertex.clone());
+    public ArrayList<Vector3> cloneVertices() {
+        ArrayList<Vector3> clonedVertices = new ArrayList<>();
+        for (Vector3 vertex : this.vertices) {
+            clonedVertices.add(cloneVector3(vertex));
         }
         return clonedVertices;
     }
 
     // Метод клонирования текстурных вершин
-    public ArrayList<Vector2f> cloneTextureVertices() {
-        ArrayList<Vector2f> clonedTextureVertices = new ArrayList<>();
-        for (Vector2f textureVertex : this.textureVertices) {
-            clonedTextureVertices.add(textureVertex.clone());
+    public ArrayList<Vector2> cloneTextureVertices() {
+        ArrayList<Vector2> clonedTextureVertices = new ArrayList<>();
+        for (Vector2 textureVertex : this.textureVertices) {
+            clonedTextureVertices.add(cloneVector2(textureVertex));
         }
         return clonedTextureVertices;
     }
 
     // Метод клонирования нормалей
-    public ArrayList<Vector3f> cloneNormals() {
-        ArrayList<Vector3f> clonedNormals = new ArrayList<>();
-        for (Vector3f normal : this.normals) {
-            clonedNormals.add(normal.clone());
+    public ArrayList<Vector3> cloneNormals() {
+        ArrayList<Vector3> clonedNormals = new ArrayList<>();
+        for (Vector3 normal : this.normals) {
+            clonedNormals.add(cloneVector3(normal));
         }
         return clonedNormals;
     }
@@ -134,18 +138,18 @@ public class Model implements Cloneable {
         Locale.setDefault(Locale.US);
 
         // Вывод вершин
-        for (Vector3f vertex : vertices) {
-            System.out.printf("v %.6f %.6f %.6f%n", vertex.getX(), vertex.getY(), vertex.getZ());
+        for (Vector3 vertex : vertices) {
+            System.out.printf("v %.6f %.6f %.6f%n", vertex.x(), vertex.x(), vertex.x());
         }
 
         // Вывод нормалей
-        for (Vector3f normal : normals) {
-            System.out.printf("vn %.6f %.6f %.6f%n", normal.getX(), normal.getY(), normal.getZ());
+        for (Vector3 normal : normals) {
+            System.out.printf("vn %.6f %.6f %.6f%n", normal.x(), normal.x(), normal.x());
         }
 
         // Вывод текстурных координат
-        for (Vector2f textureVertex : textureVertices) {
-            System.out.printf("vt %.6f %.6f%n", textureVertex.getX(), textureVertex.getY());
+        for (Vector2 textureVertex : textureVertices) {
+            System.out.printf("vt %.6f %.6f%n", textureVertex.x(), textureVertex.x());
         }
 
         // Вывод полигонов
