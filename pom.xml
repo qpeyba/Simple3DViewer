@@ -55,6 +55,11 @@
             <artifactId>linear_algebra</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>io.github.shimeoki.jfx</groupId>
+            <artifactId>rasterization</artifactId>
+            <version>3.0.0</version>
+        </dependency>
     </dependencies>
 
     <build>
