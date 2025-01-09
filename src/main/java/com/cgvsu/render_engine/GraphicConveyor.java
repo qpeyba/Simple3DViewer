@@ -1,6 +1,9 @@
 package com.cgvsu.render_engine;
 import io.github.alphameo.linear_algebra.mat.*;
 import io.github.alphameo.linear_algebra.vec.*;
+
+import javax.vecmath.Point2f;
+
 import static io.github.alphameo.linear_algebra.mat.Matrix4Col.*;
 import static io.github.alphameo.linear_algebra.mat.Matrix4Row.*;
 
@@ -47,7 +50,7 @@ public class GraphicConveyor { // not to be used
         Matrix4 result = new Mat4();
         float tangentMinusOnDegree = (float) (1.0F / (Math.tan(fov * 0.5F)));
         result.set(R0, C0, tangentMinusOnDegree);
-        result.set(R1, C1, tangentMinusOnDegree / aspectRatio);
+        result.set(R1, C1, tangentMinusOnDegree * 4.0F / aspectRatio);
         result.set(R2, C2, (farPlane + nearPlane) / (farPlane - nearPlane));
         result.set(R3, C2, 1.0F);
         result.set(R2, C3, 2 * (nearPlane * farPlane) / (nearPlane - farPlane));
@@ -67,8 +70,11 @@ public class GraphicConveyor { // not to be used
         Vec4Math.divide(resVertex, resVertex.w());
         return new Vec3(resVertex.x(), resVertex.y(), resVertex.z());
     }
-
-    public static Vec2 vertexToPoint(final Vector3 vertex, final int width, final int height) {
+    public static Vector2 vertexToVec2(final Vector3 vertex, final int width, final int height) {
         return new Vec2(vertex.x() * width + width / 2.0F, -vertex.y() * height + height / 2.0F);
     }
+
+//    public static Point2f vertexToPoint(final Vector3 vertex, final int width, final int height) {
+//        return new Point2f(vertex.x() * width + width / 2.0F, -vertex.y() * height + height / 2.0F);
+//    }
 }

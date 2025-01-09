@@ -53,6 +53,13 @@ public class GraphicConveyorTest {
         ));
 
     }
+//    @Test
+//    void vertexToPointtest () {
+//        Vector3 vector = new Vec3(1, 2, 3);
+//        Assertions.assertTrue(
+//                vertexToVec2(vector, 50, 50).x().equals(vertexToPoint(vector, 50, 50).x)
+//        );
+//    }
 
     //An old, correct variant of lookAt
     public static Matrix4 lookAt1(Vector3 eye, Vector3 target, Vector3 up) {
