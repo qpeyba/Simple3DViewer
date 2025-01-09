@@ -45,8 +45,8 @@ public class Model implements Cloneable {
             Vector3 v1 = vertices.get(vertexIndices.get(1));
             Vector3 v2 = vertices.get(vertexIndices.get(2));
 
-            Vector3 edge1 = Vec3Math.sub(v1, v0);
-            Vector3 edge2 = Vec3Math.sub(v2, v0);
+            Vector3 edge1 = Vec3Math.subtracted(v1, v0);
+            Vector3 edge2 = Vec3Math.subtracted(v2, v0);
             Vector3 faceNormal = Vec3Math.normalize(Vec3Math.cross(edge1, edge2));
 //            Vector3 edge1 = v1.subtract(v0);
 //            Vector3 edge2 = v2.subtract(v0);
