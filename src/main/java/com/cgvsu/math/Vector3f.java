@@ -32,19 +32,21 @@ public class Vector3f implements Cloneable{
         return z;
     }
 
-    /** Для удаления вершин /VerDel **/
+    /**
+     * Для удаления вершин /VerDel
+     **/
     @Override
-    public Vector3f clone()  {
+    public Vector3f clone() {
         try {
             return (Vector3f) super.clone();
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
         }
     }
+  
     public static Vector3 cloneVector3(Vector3 vector) {
         return new Vec3(vector.x(), vector.y(), vector.z());
     }
-    /** VerDel\ **/
 
     @Override
     public boolean equals(Object o) {
@@ -56,5 +58,10 @@ public class Vector3f implements Cloneable{
     @Override
     public int hashCode() {
         return Objects.hash(x, y, z);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("(%.2f, %.2f, %.2f)", x, y, z);
     }
 }

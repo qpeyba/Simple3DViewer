@@ -77,6 +77,9 @@ public class ObjReader {
                 polygon.setNormalIndices(normalIndices);
                 result.polygons.add(polygon);
             }
+            //триангуляция и перерасчет нормалей модели
+            result.triangulate();
+            result.computeNormals();
 
             tempFile.delete();
             
