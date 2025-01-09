@@ -1,26 +1,28 @@
 package com.cgvsu;
 
-import com.cgvsu.model.Model;
-import com.cgvsu.obj_io.reader.ObjReader;
-import com.cgvsu.obj_io.writer.ObjWriter;
-import com.cgvsu.render_engine.Camera;
 import com.cgvsu.render_engine.RenderEngine;
 import io.github.alphameo.linear_algebra.vec.Vec3;
+import io.github.alphameo.linear_algebra.vec.Vector3;
+import javafx.fxml.FXML;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.AnchorPane;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.FileChooser;
 import javafx.util.Duration;
-
-import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.io.IOException;
+import java.io.File;
+import javax.vecmath.Vector3f;
+
+import com.cgvsu.model.Model;
+import com.cgvsu.obj_io.reader.ObjReader;
+import com.cgvsu.obj_io.writer.ObjWriter;
+import com.cgvsu.render_engine.Camera;
 
 public class GuiController {
 

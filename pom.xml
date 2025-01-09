@@ -12,18 +12,19 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.8.1</junit.version>
+        <javafx.version>21.0.5</javafx.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>17.0.0.1</version>
+            <version>${javafx.version}</version>
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-fxml</artifactId>
-            <version>17.0.0.1</version>
+            <version>${javafx.version}</version>
         </dependency>
         <dependency>
             <groupId>java3d</groupId>
@@ -46,8 +47,6 @@
             <groupId>io.github.shimeoki</groupId>
             <artifactId>jshaper</artifactId>
             <version>0.15.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/libs/jshaper-0.15.0.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>io.github.alphameo</groupId>

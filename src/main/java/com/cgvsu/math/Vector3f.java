@@ -1,8 +1,12 @@
 package com.cgvsu.math;
 
-import java.util.Objects;
+import io.github.alphameo.linear_algebra.vec.Vec3;
+import io.github.alphameo.linear_algebra.vec.Vector3;
 
-public class Vector3f {
+import java.util.Objects;
+import java.util.Vector;
+
+public class Vector3f implements Cloneable{
     public Vector3f(float x, float y, float z) {
         this.x = x;
         this.y = y;
@@ -27,6 +31,20 @@ public class Vector3f {
     public float getZ() {
         return z;
     }
+
+    /** Для удаления вершин /VerDel **/
+    @Override
+    public Vector3f clone()  {
+        try {
+            return (Vector3f) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public static Vector3 cloneVector3(Vector3 vector) {
+        return new Vec3(vector.x(), vector.y(), vector.z());
+    }
+    /** VerDel\ **/
 
     @Override
     public boolean equals(Object o) {
