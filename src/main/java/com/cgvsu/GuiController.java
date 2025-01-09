@@ -1,8 +1,6 @@
 package com.cgvsu;
 
 import com.cgvsu.render_engine.RenderEngine;
-import io.github.alphameo.linear_algebra.vec.Vec3;
-import io.github.alphameo.linear_algebra.vec.Vector3;
 import javafx.fxml.FXML;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -45,8 +43,8 @@ public class GuiController {
     private Model mesh = null;
 
     private Camera camera = new Camera(
-            new Vec3(0, 00, 100),
-            new Vec3(0, 0, 0),
+            new Vector3f(0, 00, 100),
+            new Vector3f(0, 0, 0),
             1.0F, 1, 0.01F, 100);
 
     private Timeline timeline;
@@ -98,48 +96,35 @@ public class GuiController {
 
         }
     }
-    @FXML
-    private TextField inputForModelMoving;
-
-    @FXML
-    private TextField inputForModelRotation;
-
-    @FXML
-    private TextField inputForModelScaling;
-
-    @FXML
-    void applyTransformation(MouseEvent event) {
-
-    }
 
     @FXML
     public void handleCameraForward(ActionEvent actionEvent) {
-        camera.movePosition(new Vec3(0, 0, -TRANSLATION));
+        camera.movePosition(new Vector3f(0, 0, -TRANSLATION));
     }
 
     @FXML
     public void handleCameraBackward(ActionEvent actionEvent) {
-        camera.movePosition(new Vec3(0, 0, TRANSLATION));
+        camera.movePosition(new Vector3f(0, 0, TRANSLATION));
     }
 
     @FXML
     public void handleCameraLeft(ActionEvent actionEvent) {
-        camera.movePosition(new Vec3(TRANSLATION, 0, 0));
+        camera.movePosition(new Vector3f(TRANSLATION, 0, 0));
     }
 
     @FXML
     public void handleCameraRight(ActionEvent actionEvent) {
-        camera.movePosition(new Vec3(-TRANSLATION, 0, 0));
+        camera.movePosition(new Vector3f(-TRANSLATION, 0, 0));
     }
 
     @FXML
     public void handleCameraUp(ActionEvent actionEvent) {
-        camera.movePosition(new Vec3(0, TRANSLATION, 0));
+        camera.movePosition(new Vector3f(0, TRANSLATION, 0));
     }
 
     @FXML
     public void handleCameraDown(ActionEvent actionEvent) {
-        camera.movePosition(new Vec3(0, -TRANSLATION, 0));
+        camera.movePosition(new Vector3f(0, -TRANSLATION, 0));
     }
 
     @FXML
@@ -162,7 +147,7 @@ public class GuiController {
             System.out.println("Error saving file: " + e.getMessage());
         }
     }
-
+  
     @FXML
     private TextField VerticesToRemove;
     @FXML
@@ -184,7 +169,7 @@ public class GuiController {
 
         try {
             List<Integer> verticesToRemove = parseVerticesToRemove(VerticesToRemove.getText());
-
+          
             if (!validateVertexIndices(verticesToRemove)) {
                 showError("Invalid vertices", "One or more vertex indices are out of range.");
                 return;

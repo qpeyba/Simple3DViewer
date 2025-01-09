@@ -4,13 +4,8 @@ import com.cgvsu.math.Vector2f;
 import com.cgvsu.math.Vector3f;
 import com.cgvsu.model.Model;
 import com.cgvsu.model.Polygon;
-import io.github.alphameo.linear_algebra.vec.Vector2;
-import io.github.alphameo.linear_algebra.vec.Vector3;
 
 import java.util.*;
-
-import static com.cgvsu.math.Vector2f.cloneVector2;
-import static com.cgvsu.math.Vector3f.cloneVector3;
 
 public class Eraser {
     public static Model vertexDelete(Model model, List<Integer> index, boolean new_file, boolean hanging_NormalIndices, boolean hanging_TexturelIndices, boolean hanging_polygons) {
@@ -32,8 +27,8 @@ public class Eraser {
         modelrez.polygons = (ArrayList<Polygon>) polygons;
 
         // Обработка висячих текстур и нормалей
-        modelrez.textureVertices = (ArrayList<Vector2>) processHangingTextures(model, connectionTextureVertexIndices, deletetextureVertices, new_file, hanging_TexturelIndices);
-        modelrez.normals = (ArrayList<Vector3>) processHangingNormals(model, connectionNormalIndices, deletenormals, new_file, hanging_NormalIndices);
+        modelrez.textureVertices = (ArrayList<Vector2f>) processHangingTextures(model, connectionTextureVertexIndices, deletetextureVertices, new_file, hanging_TexturelIndices);
+        modelrez.normals = (ArrayList<Vector3f>) processHangingNormals(model, connectionNormalIndices, deletenormals, new_file, hanging_NormalIndices);
 
         if (new_file) return modelrez;
         else return model = modelrez;
@@ -111,7 +106,7 @@ public class Eraser {
         if (!connectionMap.containsKey(vertexIndex)) {
             indices.add(modelrez.vertices.size());
             connectionMap.put(vertexIndex, modelrez.vertices.size());
-            modelrez.vertices.add(new_file ? cloneVector3(model.vertices.get(vertexIndex)) : model.vertices.get(vertexIndex));
+            modelrez.vertices.add(new_file ? model.vertices.get(vertexIndex).clone() : model.vertices.get(vertexIndex));
         } else {
             indices.add(connectionMap.get(vertexIndex));
         }
@@ -124,7 +119,7 @@ public class Eraser {
         if (!connectionMap.containsKey(textureIndex)) {
             indices.add(modelrez.textureVertices.size());
             connectionMap.put(textureIndex, modelrez.textureVertices.size());
-            modelrez.textureVertices.add(new_file ? cloneVector2(model.textureVertices.get(textureIndex)) : model.textureVertices.get(textureIndex));
+            modelrez.textureVertices.add(new_file ? model.textureVertices.get(textureIndex).clone() : model.textureVertices.get(textureIndex));
         } else {
             indices.add(connectionMap.get(textureIndex));
         }
@@ -137,16 +132,16 @@ public class Eraser {
         if (!connectionMap.containsKey(normalIndex)) {
             indices.add(modelrez.normals.size());
             connectionMap.put(normalIndex, modelrez.normals.size());
-            modelrez.normals.add(new_file ? cloneVector3(model.normals.get(normalIndex)) : model.normals.get(normalIndex));
+            modelrez.normals.add(new_file ? model.normals.get(normalIndex).clone() : model.normals.get(normalIndex));
         } else {
             indices.add(connectionMap.get(normalIndex));
         }
     }
 
-    private static List<Vector3> processHangingNormals(Model model, Map<Integer, Integer> connectionMap, Set<Integer> deletedNormals, boolean new_file, boolean hanging) {
+    private static List<Vector3f> processHangingNormals(Model model, Map<Integer, Integer> connectionMap, Set<Integer> deletedNormals, boolean new_file, boolean hanging) {
         if (hanging) return new_file ? model.cloneNormals() : model.normals;
 
-        List<Vector3> updatedNormals = new ArrayList<>();
+        List<Vector3f> updatedNormals = new ArrayList<>();
         for (int i = 0; i < model.normals.size(); i++) {
             if (!connectionMap.containsKey(i) && !deletedNormals.contains(i)) {
                 updatedNormals.add(model.normals.get(i));
@@ -155,10 +150,10 @@ public class Eraser {
         return updatedNormals;
     }
 
-    private static List<Vector2> processHangingTextures(Model model, Map<Integer, Integer> connectionMap, Set<Integer> deletedTextures, boolean new_file, boolean hanging) {
+    private static List<Vector2f> processHangingTextures(Model model, Map<Integer, Integer> connectionMap, Set<Integer> deletedTextures, boolean new_file, boolean hanging) {
         if (hanging) return new_file ? model.cloneTextureVertices() : model.textureVertices;
 
-        List<Vector2> updatedTextures = new ArrayList<>();
+        List<Vector2f> updatedTextures = new ArrayList<>();
         for (int i = 0; i < model.textureVertices.size(); i++) {
             if (!connectionMap.containsKey(i) && !deletedTextures.contains(i)) {
                 updatedTextures.add(model.textureVertices.get(i));
