@@ -15,6 +15,9 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Text?>
 
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
 <AnchorPane fx:id="anchorPane" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cgvsu.GuiController">
 
     <Canvas fx:id="canvas" height="720.0" width="1280.0" AnchorPane.topAnchor="0.0" />
@@ -87,4 +90,33 @@
        </TitledPane>
       </children>
    </Pane>
+    <Pane layoutX="-1.0" layoutY="189" prefHeight="693.0" prefWidth="206.0">
+        <children>
+            <Accordion layoutX="2.0" layoutY="103.0" />
+            <TitledPane animated="false" prefHeight="165.0" prefWidth="206.0" text="Choose Color">
+                <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="167.0" prefWidth="204.0">
+                        <children>
+                            <Label layoutX="8.0" layoutY="10.0" text="Select a color:" />
+                            <ComboBox fx:id="colorPicker" layoutX="8.0" layoutY="35.0" prefWidth="190.0">
+                                <items>
+                                    <FXCollections fx:factory="observableArrayList">
+                                        <String fx:value="Red" />
+                                        <String fx:value="Green" />
+                                        <String fx:value="Blue" />
+                                        <String fx:value="Yellow" />
+                                        <String fx:value="White" />
+                                        <String fx:value="Black" />
+                                    </FXCollections>
+                                </items>
+                            </ComboBox>
+                            <Button fx:id="applyColorButton" layoutX="8.0" layoutY="75.0" prefWidth="92" mnemonicParsing="false" text="Apply" onAction="#chooseColor" />
+                            <Button fx:id="resetColorButton" layoutX="98" layoutY="75.0" prefWidth="94" mnemonicParsing="false" text="Reset" onAction="#resetPolygonColor" />
+                        </children>
+                    </AnchorPane>
+                </content>
+            </TitledPane>
+        </children>
+    </Pane>
 </AnchorPane>
+
