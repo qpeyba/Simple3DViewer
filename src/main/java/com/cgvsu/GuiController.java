@@ -147,6 +147,7 @@ public class GuiController {
             System.out.println("Error saving file: " + e.getMessage());
         }
     }
+  
     @FXML
     private TextField VerticesToRemove;
     @FXML
@@ -168,7 +169,7 @@ public class GuiController {
 
         try {
             List<Integer> verticesToRemove = parseVerticesToRemove(VerticesToRemove.getText());
-            
+          
             if (!validateVertexIndices(verticesToRemove)) {
                 showError("Invalid vertices", "One or more vertex indices are out of range.");
                 return;
