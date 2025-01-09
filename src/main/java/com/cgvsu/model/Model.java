@@ -31,7 +31,7 @@ public class Model implements Cloneable {
 
     public void computeNormals() {
 
-        Map<Integer, Vector3f> vertexNormals = new HashMap<>();
+        Map<Integer, Vector3> vertexNormals = new HashMap<>();
         Map<Integer, Integer> vertexNormalsCount = new HashMap<>();
 
 
@@ -41,20 +41,25 @@ public class Model implements Cloneable {
                 continue;
             }
 
-            Vector3f v0 = vertices.get(vertexIndices.get(0));
-            Vector3f v1 = vertices.get(vertexIndices.get(1));
-            Vector3f v2 = vertices.get(vertexIndices.get(2));
+            Vector3 v0 = vertices.get(vertexIndices.get(0));
+            Vector3 v1 = vertices.get(vertexIndices.get(1));
+            Vector3 v2 = vertices.get(vertexIndices.get(2));
 
-            Vector3f edge1 = v1.subtract(v0);
-            Vector3f edge2 = v2.subtract(v0);
-            Vector3f faceNormal = edge1.cross(edge2).normalize();
+            Vector3 edge1 = Vec3Math.sub(v1, v0);
+            Vector3 edge2 = Vec3Math.sub(v2, v0);
+            Vector3 faceNormal = Vec3Math.normalize(Vec3Math.cross(edge1, edge2));
+//            Vector3 edge1 = v1.subtract(v0);
+//            Vector3 edge2 = v2.subtract(v0);
+//            Vector3 faceNormal = edge1.cross(edge2).normalize();
 
             for (int index : vertexIndices) {
                 vertexNormals.compute(index, (k, v) -> {
                     if (v == null) {
-                        return faceNormal.copy();
+                        return cloneVector3(faceNormal);
+//                        return faceNormal.copy();
                     } else {
-                        return v.add(faceNormal);
+                        return Vec3Math.add(v, faceNormal);
+//                        return v.add(faceNormal);
                     }
                 });
             }
@@ -72,15 +77,17 @@ public class Model implements Cloneable {
 
 
         for (Integer index : vertexNormals.keySet()) {
-            vertexNormals.put(index, vertexNormals.get(index).divide(vertexNormalsCount.get(index)));
+            vertexNormals.put(index, Vec3Math.divide(vertexNormals.get(index), vertexNormalsCount.get(index)));
+//            vertexNormals.put(index, vertexNormals.get(index).divide(vertexNormalsCount.get(index)));
         }
 
 
         normals = new ArrayList<>();
         for (int i = 0; i < vertices.size(); i++) {
-            normals.add(vertexNormals.getOrDefault(i, new Vector3f(0, 0, 0)));
+            normals.add(vertexNormals.getOrDefault(i, new Vec3(0, 0, 0)));
         }
     }
+
 
     /** Для удаления вершин /VerDel **/
         public Model() {
