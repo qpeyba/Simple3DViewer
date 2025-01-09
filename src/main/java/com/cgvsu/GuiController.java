@@ -3,18 +3,13 @@ package com.cgvsu;
 import com.cgvsu.model.Polygon;
 import com.cgvsu.render_engine.PolygonFiller;
 import com.cgvsu.render_engine.RenderEngine;
-import com.cgvsu.render_engine.RenderEngineWithFiller;
-import io.github.shimeoki.jfx.rasterization.Colorf;
 import javafx.fxml.FXML;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -33,6 +28,7 @@ import com.cgvsu.model.Model;
 import com.cgvsu.obj_io.reader.ObjReader;
 import com.cgvsu.obj_io.writer.ObjWriter;
 import com.cgvsu.render_engine.Camera;
+import io.github.shimeoki.jfx.rasterization.Colorf;
 
 public class GuiController {
 
@@ -52,6 +48,7 @@ public class GuiController {
             1.0F, 1, 0.01F, 100);
 
     private Timeline timeline;
+    private Colorf color;
 
     @FXML
     private void initialize() {
@@ -69,9 +66,11 @@ public class GuiController {
             camera.setAspectRatio((float) (width / height));
 
             if (mesh != null) {
-                RenderEngine.render(canvas.getGraphicsContext2D(), camera, mesh, (int) width, (int) height);
-                PolygonFiller.fillPolygon(canvas.getGraphicsContext2D(), camera, mesh, (int) width, (int) height, new Colorf(0.0F, 1.0F, 1.0F, 1.0F));
-
+                if (color!=null){
+                    PolygonFiller.fillPolygon(canvas.getGraphicsContext2D(), camera, mesh, (int) width, (int) height, color);
+                }else{
+                    RenderEngine.render(canvas.getGraphicsContext2D(), camera, mesh, (int) width, (int) height);
+                }
             }
         });
 
@@ -230,5 +229,99 @@ public class GuiController {
         alert.setHeaderText(null);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+
+    @FXML
+    private Button colorPolygonButton;
+
+    @FXML
+    private ComboBox<String> colorPicker;
+
+//    @FXML
+//    private void handleColorPolygon(ActionEvent actionEvent) {
+//
+//        if (mesh == null) {
+//            showError("No model loaded", "Please load a model first before applying colors.");
+//            return;
+//        }
+//
+//        String selectedColor = colorPicker.getValue();
+//        if (selectedColor == null) {
+//            showError("No color selected", "Please select a color to apply.");
+//            return;
+//        }
+//
+//        switch (selectedColor.toLowerCase()) {
+//            case "red":
+//                color = new Colorf(1.0f, 0.0f, 0.0f, 1.0F);
+//                break;
+//            case "green":
+//                color = new Colorf(0.0f, 1.0f, 0.0f, 1.0F);
+//                break;
+//            case "blue":
+//                color = new Colorf(0.0f, 0.0f, 1.0f, 1.0F);
+//                break;
+//            case "yellow":
+//                color = new Colorf(1.0f, 1.0f, 0.0f, 1.0F);
+//                break;
+//            case "white":
+//                color = new Colorf(1.0f, 1.0f, 1.0f, 1.0F);
+//                break;
+//            default:
+//                color = new Colorf(0.0f, 0.0f, 0.0f, 1.0F); // Черный цвет по умолчанию
+//                break;
+//        }
+//
+//        timeline = new Timeline();
+//        timeline.setCycleCount(Animation.INDEFINITE);
+//
+//        KeyFrame frame = new KeyFrame(Duration.millis(15), event -> {
+//            double width = canvas.getWidth();
+//            double height = canvas.getHeight();
+//
+//            canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
+//            camera.setAspectRatio((float) (width / height));
+//
+//            if (mesh != null) {
+//                PolygonFiller.fillPolygon(canvas.getGraphicsContext2D(), camera, mesh, (int) width, (int) height, color);
+//            }
+//        });
+//
+//        timeline.getKeyFrames().add(frame);
+//        timeline.play();
+//
+//        vertexRemoverButton.setOnAction(event -> handleVertexRemoval());
+//    }
+
+    public void chooseColor(ActionEvent actionEvent){
+        String selectedColor = colorPicker.getValue();
+        if (selectedColor == null) {
+            showError("No color selected", "Please select a color to apply.");
+            return;
+        }
+
+        switch (selectedColor.toLowerCase()) {
+            case "red":
+                color = new Colorf(1.0f, 0.0f, 0.0f, 1.0F);
+                break;
+            case "green":
+                color = new Colorf(0.0f, 1.0f, 0.0f, 1.0F);
+                break;
+            case "blue":
+                color = new Colorf(0.0f, 0.0f, 1.0f, 1.0F);
+                break;
+            case "yellow":
+                color = new Colorf(1.0f, 1.0f, 0.0f, 1.0F);
+                break;
+            case "white":
+                color = new Colorf(1.0f, 1.0f, 1.0f, 1.0F);
+                break;
+            default:
+                color = new Colorf(0.0f, 0.0f, 0.0f, 1.0F); // Черный цвет по умолчанию
+                break;
+        }
+    }
+    public void resetPolygonColor(ActionEvent actionEvent) {
+        color = null;
     }
 }

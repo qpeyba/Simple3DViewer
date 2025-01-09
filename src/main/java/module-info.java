@@ -7,8 +7,6 @@ module com.cgvsu {
     requires javafx.graphics;
     requires transitive io.github.alphameo.linear_algebra;
     requires io.github.shimeoki.jfx.rasterization;
-    exports com.cgvsu.forTests;
-
 
     opens com.cgvsu to javafx.fxml;
     exports com.cgvsu;

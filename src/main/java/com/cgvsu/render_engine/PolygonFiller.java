@@ -2,13 +2,12 @@ package com.cgvsu.render_engine;
 
 import com.cgvsu.math.Vector3f;
 import com.cgvsu.model.Model;
-import io.github.shimeoki.jfx.rasterization.DDATriangler;
+import com.cgvsu.render_engine.Rasterization.DDATriangler;
+import com.cgvsu.render_engine.Rasterization.ZBuffer;
 import javafx.scene.canvas.GraphicsContext;
 import io.github.shimeoki.jfx.rasterization.*;
 import io.github.shimeoki.jfx.rasterization.triangle.SolidFiller;
-
 import javax.vecmath.Matrix4f;
-
 import static com.cgvsu.render_engine.GraphicConveyor.*;
 
 public class PolygonFiller {
@@ -18,8 +17,8 @@ public class PolygonFiller {
             final Model mesh,
             final int width,
             final int height,
-            final Colorf colorf)
-    {
+            final Colorf colorf
+    ) {
         Matrix4f modelMatrix = rotateScaleTranslate();
         Matrix4f viewMatrix = camera.getViewMatrix();
         Matrix4f projectionMatrix = camera.getProjectionMatrix();
@@ -28,9 +27,8 @@ public class PolygonFiller {
         modelViewProjectionMatrix.mul(viewMatrix);
         modelViewProjectionMatrix.mul(projectionMatrix);
 
-        DDATriangler triangler = new DDATriangler(graphicsContext);
+        ZBuffer zBuffer = new ZBuffer(width, height);
         SolidFiller filler = new SolidFiller(colorf);
-        triangler.setFiller(filler);
 
         final int nPolygons = mesh.polygons.size();
         for (int polygonInd = 0; polygonInd < nPolygons; ++polygonInd) {
@@ -51,7 +49,10 @@ public class PolygonFiller {
             Vector2f v3 = new Vector2f(resultPoint3.x, resultPoint3.y);
             Polygon3 poly = new Polygon3(v1, v2, v3);
 
+            com.cgvsu.render_engine.Rasterization.DDATriangler triangler = new DDATriangler(graphicsContext, zBuffer, vertexVecmath1.z, vertexVecmath2.z, vertexVecmath3.z);
+            triangler.setFiller(filler);
             triangler.draw(poly);
+
         }
     }
 }
