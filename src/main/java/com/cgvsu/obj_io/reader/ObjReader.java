@@ -78,8 +78,8 @@ public class ObjReader {
                 result.polygons.add(polygon);
             }
             //триангуляция и перерасчет нормалей модели
-            result.triangulate();
-            result.computeNormals();
+            // result.triangulate();
+            // result.computeNormals();
 
             tempFile.delete();
             
