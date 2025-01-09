@@ -324,4 +324,18 @@ public class GuiController {
     public void resetPolygonColor(ActionEvent actionEvent) {
         color = null;
     }
+
+    @FXML
+    private TextField inputForModelMoving;
+
+    @FXML
+    private TextField inputForModelRotation;
+
+    @FXML
+    private TextField inputForModelScaling;
+
+    @FXML
+    void applyTransformation(MouseEvent event) {
+
+    }
 }
