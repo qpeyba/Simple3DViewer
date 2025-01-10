@@ -12,10 +12,6 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TextField;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -57,6 +53,10 @@ public class GuiController {
     private Timeline timeline;
     private Colorf color;
 
+    private Vec3 currentTranslation = new Vec3(0, 0, 0);
+    private Vec3 currentRotation = new Vec3(0, 0, 0);
+    private Vec3 currentScale = new Vec3(1, 1, 1);
+
     @FXML
     private void initialize() {
         anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
@@ -84,6 +84,19 @@ public class GuiController {
         timeline.play();
 
         vertexRemoverButton.setOnAction(event -> handleVertexRemoval());
+
+        updateTransformationFields();
+    }
+
+    private void updateTransformationFields() {
+        inputForModelMoving.setText(String.format("%.1f %.1f %.1f", 
+            currentTranslation.x(), currentTranslation.y(), currentTranslation.z()));
+            
+        inputForModelRotation.setText(String.format("%.1f %.1f %.1f",
+            currentRotation.x(), currentRotation.y(), currentRotation.z()));
+            
+        inputForModelScaling.setText(String.format("%.1f %.1f %.1f",
+            currentScale.x(), currentScale.y(), currentScale.z()));
     }
 
     @FXML
@@ -115,16 +128,87 @@ public class GuiController {
 
     @FXML
     private TextField inputForModelScaling;
+    
+
+
+
+       @FXML
+    void applyTransformation(MouseEvent event) {
+        if (mesh == null) return;
+    
+        try {
+            String[] translateValues = inputForModelMoving.getText().split("\\s+");
+            String[] rotateValues = inputForModelRotation.getText().split("\\s+");
+            String[] scaleValues = inputForModelScaling.getText().split("\\s+");
+    
+            Vec3 translation = new Vec3(
+                Float.parseFloat(translateValues[0]),
+                Float.parseFloat(translateValues[1]),
+                Float.parseFloat(translateValues[2])
+            );
+    
+            Vec3 rotation = new Vec3(
+                Float.parseFloat(rotateValues[0]),
+                Float.parseFloat(rotateValues[1]),
+                Float.parseFloat(rotateValues[2])
+            );
+    
+            Vec3 scale = new Vec3(
+                Float.parseFloat(scaleValues[0]),
+                Float.parseFloat(scaleValues[1]),
+                Float.parseFloat(scaleValues[2])
+            );
+    
+            Transformation transformation = new Transformation(
+                new Translator(translation.x(), translation.y(), translation.z()),
+                new Rotator(rotation.z(), Rotator.Axis.Z),
+                new Rotator(rotation.y(), Rotator.Axis.Y),
+                new Rotator(rotation.x(), Rotator.Axis.X),
+                new Scaling(scale.x(), scale.y(), scale.z())
+            );
+    
+            mesh.vertices = new ArrayList<>(transformation.transform(mesh.vertices));
+    
+            currentTranslation = translation;
+            currentRotation = rotation;
+            currentScale = scale;
+    
+        } catch (NumberFormatException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Input Error");
+            alert.setHeaderText("Invalid transformation values");
+            alert.setContentText("Please enter valid numbers in format: x y z");
+            alert.showAndWait();
+        } catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Transformation Error");
+            alert.setHeaderText("Error applying transformation");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+        }
+    }
 
     @FXML
-    void applyTransformation(MouseEvent event) { //to be
-//        AffineTransformation transformation = new Transformation(
-//                new Translator(xTranslate, yTranslate, zTranslate),
-//                new Rotator(zAngle, Rotator.Axis.Z),
-//                new Rotator(yAngle, Rotator.Axis.Y),
-//                new Rotator(xAngle, Rotator.Axis.X),
-//                new Scaling(xScale, yScale, zScale));
-//        mesh.vertices = new ArrayList<>(transformation.transform(mesh.vertices));
+    void resetTransformation(MouseEvent event) {
+        if (mesh == null) return;
+    
+        currentTranslation = new Vec3(0, 0, 0);
+        currentRotation = new Vec3(0, 0, 0);
+        currentScale = new Vec3(1, 1, 1);
+    
+        inputForModelMoving.setText("0 0 0");
+        inputForModelRotation.setText("0 0 0");
+        inputForModelScaling.setText("1 1 1");
+    
+        Transformation transformation = new Transformation(
+            new Translator(0, 0, 0),
+            new Rotator(0, Rotator.Axis.Z),
+            new Rotator(0, Rotator.Axis.Y),
+            new Rotator(0, Rotator.Axis.X),
+            new Scaling(1, 1, 1)
+        );
+    
+        mesh.vertices = new ArrayList<>(transformation.transform(mesh.vertices));
     }
 
     @FXML
@@ -312,7 +396,7 @@ public class GuiController {
                 removePolygons
             );
 
-            if (createNewModel) { // I dont quite understand what this shit does, probably it needs implementation of several models (I'll figure it out later)
+            if (createNewModel) { // I dont quite understand what this crap does, probably it needs implementation of several models (I'll figure it out later)
                 mesh = resultModel;
             }
 
