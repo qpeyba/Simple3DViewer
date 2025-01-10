@@ -64,6 +64,16 @@
                     <KeyCodeCombination alt="UP" code="S" control="UP" meta="UP" shift="DOWN" shortcut="UP" />
                 </accelerator>
             </MenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#moveCameraUp" text="moveUp">
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="W" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                </accelerator>
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#moveCameraDown" text="moveDown">
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+                </accelerator>
+            </MenuItem>
         </Menu>
     </MenuBar>
    <Pane layoutX="-1.0" layoutY="27.0" prefHeight="693.0" prefWidth="206.0">
