@@ -52,7 +52,7 @@ public class GuiController {
 
     private Camera camera = new Camera(
             new Vec2((float)(Math.PI/4), (float)(Math.PI/4)),
-            1000f,
+            100f,
             new Vec3(0, 0, 0),
             1.0F,
             1,
@@ -138,22 +138,31 @@ public class GuiController {
 
     @FXML
     public void handleCameraLeft(ActionEvent actionEvent) {
-        camera.moveRotation(new Vec2(-TRANSLATION/100, 0));
-    }
-
-    @FXML
-    public void handleCameraRight(ActionEvent actionEvent) {
         camera.moveRotation(new Vec2(TRANSLATION/100, 0));
     }
 
     @FXML
+    public void handleCameraRight(ActionEvent actionEvent) {
+        camera.moveRotation(new Vec2(-TRANSLATION/100, 0));
+    }
+
+    @FXML
     public void handleCameraUp(ActionEvent actionEvent) {
-        camera.moveRotation(new Vec2(0, -TRANSLATION/100));
+        camera.moveRotation(new Vec2(0, TRANSLATION/100));
     }
 
     @FXML
     public void handleCameraDown(ActionEvent actionEvent) {
-        camera.moveRotation(new Vec2(0, TRANSLATION/100));
+        camera.moveRotation(new Vec2(0, -TRANSLATION/100));
+    }
+
+    @FXML
+    public void moveCameraUp(ActionEvent actionEvent) {
+        camera.moveTarget(new Vec3(0, TRANSLATION/2, 0));
+    }
+    @FXML
+    public void moveCameraDown(ActionEvent actionEvent) {
+        camera.moveTarget(new Vec3(0, -TRANSLATION/2, 0));
     }
 
     @FXML
