@@ -128,11 +128,12 @@ public class GuiController {
 
     @FXML
     private TextField inputForModelScaling;
+
+    private Vec3 accumulatedTranslation = new Vec3(0, 0, 0);
+    private Vec3 accumulatedRotation = new Vec3(0, 0, 0);
+    private Vec3 accumulatedScale = new Vec3(1, 1, 1);
     
-
-
-
-       @FXML
+    @FXML
     void applyTransformation(MouseEvent event) {
         if (mesh == null) return;
     
@@ -161,13 +162,31 @@ public class GuiController {
     
             Transformation transformation = new Transformation(
                 new Translator(translation.x(), translation.y(), translation.z()),
-                new Rotator(rotation.z(), Rotator.Axis.Z),
-                new Rotator(rotation.y(), Rotator.Axis.Y),
                 new Rotator(rotation.x(), Rotator.Axis.X),
+                new Rotator(rotation.y(), Rotator.Axis.Y),
+                new Rotator(rotation.z(), Rotator.Axis.Z),
                 new Scaling(scale.x(), scale.y(), scale.z())
             );
     
             mesh.vertices = new ArrayList<>(transformation.transform(mesh.vertices));
+    
+            accumulatedTranslation = new Vec3(
+                accumulatedTranslation.x() + translation.x(),
+                accumulatedTranslation.y() + translation.y(),
+                accumulatedTranslation.z() + translation.z()
+            );
+    
+            accumulatedRotation = new Vec3(
+                accumulatedRotation.x() + rotation.x(),
+                accumulatedRotation.y() + rotation.y(),
+                accumulatedRotation.z() + rotation.z()
+            );
+    
+            accumulatedScale = new Vec3(
+                accumulatedScale.x() * scale.x(),
+                accumulatedScale.y() * scale.y(),
+                accumulatedScale.z() * scale.z()
+            );
     
             currentTranslation = translation;
             currentRotation = rotation;
@@ -187,30 +206,32 @@ public class GuiController {
             alert.showAndWait();
         }
     }
-
+    
     @FXML
     void resetTransformation(MouseEvent event) {
         if (mesh == null) return;
+        
+        Transformation resetTransformation = new Transformation(
+            new Translator(-accumulatedTranslation.x(), -accumulatedTranslation.y(), -accumulatedTranslation.z()),
+            new Rotator(-accumulatedRotation.x(), Rotator.Axis.X),
+            new Rotator(-accumulatedRotation.y(), Rotator.Axis.Y), 
+            new Rotator(-accumulatedRotation.z(), Rotator.Axis.Z),
+            new Scaling(1/accumulatedScale.x(), 1/accumulatedScale.y(), 1/accumulatedScale.z())
+        );
+        mesh.vertices = new ArrayList<>(resetTransformation.transform(mesh.vertices));
     
         currentTranslation = new Vec3(0, 0, 0);
         currentRotation = new Vec3(0, 0, 0);
         currentScale = new Vec3(1, 1, 1);
+        accumulatedTranslation = new Vec3(0, 0, 0);
+        accumulatedRotation = new Vec3(0, 0, 0);
+        accumulatedScale = new Vec3(1, 1, 1);
     
-        inputForModelMoving.setText("0 0 0");
-        inputForModelRotation.setText("0 0 0");
-        inputForModelScaling.setText("1 1 1");
-    
-        Transformation transformation = new Transformation(
-            new Translator(0, 0, 0),
-            new Rotator(0, Rotator.Axis.Z),
-            new Rotator(0, Rotator.Axis.Y),
-            new Rotator(0, Rotator.Axis.X),
-            new Scaling(1, 1, 1)
-        );
-    
-        mesh.vertices = new ArrayList<>(transformation.transform(mesh.vertices));
+        inputForModelMoving.setText("0.0 0.0 0.0");
+        inputForModelRotation.setText("0.0 0.0 0.0");
+        inputForModelScaling.setText("1.0 1.0 1.0");
     }
-
+    
     @FXML
     public void handleCameraForward(ActionEvent actionEvent) {
         camera.movePosition(new Vec3(0, 0, -TRANSLATION));
