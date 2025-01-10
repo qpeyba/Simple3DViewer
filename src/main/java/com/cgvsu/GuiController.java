@@ -36,6 +36,7 @@ import com.cgvsu.render_engine.Camera;
 public class GuiController {
 
     final private float TRANSLATION = 0.5F;
+    
 
     @FXML
     AnchorPane anchorPane;
@@ -45,10 +46,12 @@ public class GuiController {
 
     private Model mesh = null;
 
+    final private float ASPECT_RATIO = 1.4F;
+
     private Camera camera = new Camera(
             new Vec3(0, 00, 100),
             new Vec3(0, 0, 0),
-            1.0F, 1, 0.01F, 100);
+            1.0F, ASPECT_RATIO, 0.01F, 100);
 
     private Timeline timeline;
     private Colorf color;
@@ -57,11 +60,32 @@ public class GuiController {
     private Vec3 currentRotation = new Vec3(0, 0, 0);
     private Vec3 currentScale = new Vec3(1, 1, 1);
 
+
     @FXML
     private void initialize() {
-        anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
-        anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> canvas.setHeight(newValue.doubleValue()));
 
+        canvas.setWidth(1280);
+        canvas.setHeight(720); 
+
+        anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> {
+                canvas.setWidth(newValue.doubleValue());
+                canvas.setHeight(newValue.doubleValue() / ASPECT_RATIO);
+        });
+    
+        anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> {
+                canvas.setHeight(newValue.doubleValue());
+                canvas.setWidth(newValue.doubleValue() * ASPECT_RATIO);
+        });
+
+        // anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> {
+        //         double availableWidth = newValue.doubleValue();
+        //         canvas.setWidth(availableWidth);
+        //         canvas.setHeight((availableWidth / ASPECT_RATIO));
+        // });
+
+        // anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
+        // anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> canvas.setHeight(newValue.doubleValue()));
+        
         timeline = new Timeline();
         timeline.setCycleCount(Animation.INDEFINITE);
 
