@@ -51,7 +51,7 @@ public class GuiController {
     private Model mesh = null;
 
     private Camera camera = new Camera(
-            new Vec2((float)(Math.PI/4), (float)(Math.PI/4)),
+            new Vec2((float)(Math.PI), (float)(-Math.PI/2)),
             100f,
             new Vec3(0, 0, 0),
             1.0F,
