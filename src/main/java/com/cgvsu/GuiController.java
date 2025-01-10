@@ -1,5 +1,6 @@
 package com.cgvsu;
 
+import com.cgvsu.math.affine.*;
 import com.cgvsu.model.Polygon;
 import com.cgvsu.render_engine.PolygonFiller;
 import com.cgvsu.render_engine.RenderEngine;
@@ -13,10 +14,6 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.TextField;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -41,7 +38,7 @@ import com.cgvsu.render_engine.Camera;
 public class GuiController {
 
     final private float TRANSLATION = 2F;
-
+  
     @FXML
     AnchorPane anchorPane;
 
@@ -50,23 +47,47 @@ public class GuiController {
 
     private Model mesh = null;
 
+    final private float ASPECT_RATIO = 1.4F;
+
     private Camera camera = new Camera(
             new Vec2((float)(Math.PI), (float)(-Math.PI/2)),
             100f,
             new Vec3(0, 0, 0),
-            1.0F,
-            1,
-            0.01F,
-            100);
+            1.0F, ASPECT_RATIO, 0.01F, 100);
 
     private Timeline timeline;
     private Colorf color;
 
+    private Vec3 currentTranslation = new Vec3(0, 0, 0);
+    private Vec3 currentRotation = new Vec3(0, 0, 0);
+    private Vec3 currentScale = new Vec3(1, 1, 1);
+
+
     @FXML
     private void initialize() {
-        anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
-        anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> canvas.setHeight(newValue.doubleValue()));
 
+        canvas.setWidth(1280);
+        canvas.setHeight(720); 
+
+        anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> {
+                canvas.setWidth(newValue.doubleValue());
+                canvas.setHeight(newValue.doubleValue() / ASPECT_RATIO);
+        });
+    
+        anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> {
+                canvas.setHeight(newValue.doubleValue());
+                canvas.setWidth(newValue.doubleValue() * ASPECT_RATIO);
+        });
+
+        // anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> {
+        //         double availableWidth = newValue.doubleValue();
+        //         canvas.setWidth(availableWidth);
+        //         canvas.setHeight((availableWidth / ASPECT_RATIO));
+        // });
+
+        // anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
+        // anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> canvas.setHeight(newValue.doubleValue()));
+        
         timeline = new Timeline();
         timeline.setCycleCount(Animation.INDEFINITE);
 
@@ -89,6 +110,19 @@ public class GuiController {
         timeline.play();
 
         vertexRemoverButton.setOnAction(event -> handleVertexRemoval());
+
+        updateTransformationFields();
+    }
+
+    private void updateTransformationFields() {
+        inputForModelMoving.setText(String.format("%.1f %.1f %.1f", 
+            currentTranslation.x(), currentTranslation.y(), currentTranslation.z()));
+            
+        inputForModelRotation.setText(String.format("%.1f %.1f %.1f",
+            currentRotation.x(), currentRotation.y(), currentRotation.z()));
+            
+        inputForModelScaling.setText(String.format("%.1f %.1f %.1f",
+            currentScale.x(), currentScale.y(), currentScale.z()));
     }
 
     @FXML
@@ -121,11 +155,109 @@ public class GuiController {
     @FXML
     private TextField inputForModelScaling;
 
+    private Vec3 accumulatedTranslation = new Vec3(0, 0, 0);
+    private Vec3 accumulatedRotation = new Vec3(0, 0, 0);
+    private Vec3 accumulatedScale = new Vec3(1, 1, 1);
+    
     @FXML
     void applyTransformation(MouseEvent event) {
-
+        if (mesh == null) return;
+    
+        try {
+            String[] translateValues = inputForModelMoving.getText().split("\\s+");
+            String[] rotateValues = inputForModelRotation.getText().split("\\s+");
+            String[] scaleValues = inputForModelScaling.getText().split("\\s+");
+    
+            Vec3 translation = new Vec3(
+                Float.parseFloat(translateValues[0]),
+                Float.parseFloat(translateValues[1]),
+                Float.parseFloat(translateValues[2])
+            );
+    
+            Vec3 rotation = new Vec3(
+                Float.parseFloat(rotateValues[0]),
+                Float.parseFloat(rotateValues[1]),
+                Float.parseFloat(rotateValues[2])
+            );
+    
+            Vec3 scale = new Vec3(
+                Float.parseFloat(scaleValues[0]),
+                Float.parseFloat(scaleValues[1]),
+                Float.parseFloat(scaleValues[2])
+            );
+    
+            Transformation transformation = new Transformation(
+                new Translator(translation.x(), translation.y(), translation.z()),
+                new Rotator(rotation.x(), Rotator.Axis.X),
+                new Rotator(rotation.y(), Rotator.Axis.Y),
+                new Rotator(rotation.z(), Rotator.Axis.Z),
+                new Scaling(scale.x(), scale.y(), scale.z())
+            );
+    
+            mesh.vertices = new ArrayList<>(transformation.transform(mesh.vertices));
+    
+            accumulatedTranslation = new Vec3(
+                accumulatedTranslation.x() + translation.x(),
+                accumulatedTranslation.y() + translation.y(),
+                accumulatedTranslation.z() + translation.z()
+            );
+    
+            accumulatedRotation = new Vec3(
+                accumulatedRotation.x() + rotation.x(),
+                accumulatedRotation.y() + rotation.y(),
+                accumulatedRotation.z() + rotation.z()
+            );
+    
+            accumulatedScale = new Vec3(
+                accumulatedScale.x() * scale.x(),
+                accumulatedScale.y() * scale.y(),
+                accumulatedScale.z() * scale.z()
+            );
+    
+            currentTranslation = translation;
+            currentRotation = rotation;
+            currentScale = scale;
+    
+        } catch (NumberFormatException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Input Error");
+            alert.setHeaderText("Invalid transformation values");
+            alert.setContentText("Please enter valid numbers in format: x y z");
+            alert.showAndWait();
+        } catch (Exception e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Transformation Error");
+            alert.setHeaderText("Error applying transformation");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait();
+        }
     }
-
+    
+    @FXML
+    void resetTransformation(MouseEvent event) {
+        if (mesh == null) return;
+        
+        Transformation resetTransformation = new Transformation(
+            new Translator(-accumulatedTranslation.x(), -accumulatedTranslation.y(), -accumulatedTranslation.z()),
+            new Rotator(-accumulatedRotation.x(), Rotator.Axis.X),
+            new Rotator(-accumulatedRotation.y(), Rotator.Axis.Y), 
+            new Rotator(-accumulatedRotation.z(), Rotator.Axis.Z),
+            new Scaling(1/accumulatedScale.x(), 1/accumulatedScale.y(), 1/accumulatedScale.z())
+        );
+        mesh.vertices = new ArrayList<>(resetTransformation.transform(mesh.vertices));
+    
+        currentTranslation = new Vec3(0, 0, 0);
+        currentRotation = new Vec3(0, 0, 0);
+        currentScale = new Vec3(1, 1, 1);
+        accumulatedTranslation = new Vec3(0, 0, 0);
+        accumulatedRotation = new Vec3(0, 0, 0);
+        accumulatedScale = new Vec3(1, 1, 1);
+    
+        inputForModelMoving.setText("0.0 0.0 0.0");
+        inputForModelRotation.setText("0.0 0.0 0.0");
+        inputForModelScaling.setText("1.0 1.0 1.0");
+    }
+    
     @FXML
     public void handleCameraForward(ActionEvent actionEvent) {
         camera.moveDistance(-TRANSLATION);
@@ -320,7 +452,7 @@ public class GuiController {
                 removePolygons
             );
 
-            if (createNewModel) { // I dont quite understand what this shit does, probably it needs implementation of several models (I'll figure it out later)
+            if (createNewModel) { // I dont quite understand what this crap does, probably it needs implementation of several models (I'll figure it out later)
                 mesh = resultModel;
             }
 
