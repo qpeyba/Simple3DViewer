@@ -238,12 +238,12 @@ public class GuiController {
         if (mesh == null) return;
         
         Transformation resetTransformation = new Transformation(
-            new Translator(-accumulatedTranslation.x(), -accumulatedTranslation.y(), -accumulatedTranslation.z()),
-            new Rotator(-accumulatedRotation.x(), Rotator.Axis.X),
-            new Rotator(-accumulatedRotation.y(), Rotator.Axis.Y), 
+            new Scaling(1/accumulatedScale.x(), 1/accumulatedScale.y(), 1/accumulatedScale.z()),
             new Rotator(-accumulatedRotation.z(), Rotator.Axis.Z),
-            new Scaling(1/accumulatedScale.x(), 1/accumulatedScale.y(), 1/accumulatedScale.z())
-        );
+            new Rotator(-accumulatedRotation.y(), Rotator.Axis.Y),
+            new Rotator(-accumulatedRotation.x(), Rotator.Axis.X),
+            new Translator(-accumulatedTranslation.x(), -accumulatedTranslation.y(), -accumulatedTranslation.z())
+            );
         mesh.vertices = new ArrayList<>(resetTransformation.transform(mesh.vertices));
     
         currentTranslation = new Vec3(0, 0, 0);
