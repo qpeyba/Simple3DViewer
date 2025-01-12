@@ -363,6 +363,15 @@ public class GuiController {
     }
 
     @FXML
+    public void moveCameraLeft(ActionEvent actionEvent) {
+        camera.moveTarget(new Vec3(-TRANSLATION/2, 0, 0));
+    }
+    @FXML
+    public void moveCameraRight(ActionEvent actionEvent) {
+        camera.moveTarget(new Vec3(TRANSLATION/2, 0, 0));
+    }
+
+    @FXML
     private TextField VerticesToRemove;
     @FXML
     private Button vertexRemoverButton;
