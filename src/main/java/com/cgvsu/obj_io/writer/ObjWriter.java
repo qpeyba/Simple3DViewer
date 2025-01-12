@@ -4,6 +4,8 @@ import com.cgvsu.math.Vector2f;
 import com.cgvsu.math.Vector3f;
 import com.cgvsu.model.Model;
 import com.cgvsu.model.Polygon;
+import io.github.alphameo.linear_algebra.vec.Vector2;
+import io.github.alphameo.linear_algebra.vec.Vector3;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,16 +53,16 @@ public class ObjWriter {
         return true;
     }
 
-    protected String vertexToString(Vector3f vector) {
-        return OBJ_VERTEX_TOKEN + " " + vector.getX() + " " + vector.getY() + " " + vector.getZ();
+    protected String vertexToString(Vector3 vector) {
+        return OBJ_VERTEX_TOKEN + " " + vector.x() + " " + vector.y() + " " + vector.z();
     }
 
-    protected String textureVertexToString(Vector2f vector) {
-        return OBJ_TEXTURE_TOKEN + " " + vector.getX() + " " + vector.getY();
+    protected String textureVertexToString(Vector2 vector) {
+        return OBJ_TEXTURE_TOKEN + " " + vector.x() + " " + vector.y();
     }
 
-    protected String normalToString(Vector3f vector) {
-        return OBJ_NORMAL_TOKEN + " " + vector.getX() + " " + vector.getY() + " " + vector.getZ();
+    protected String normalToString(Vector3 vector) {
+        return OBJ_NORMAL_TOKEN + " " + vector.x() + " " + vector.y() + " " + vector.z();
     }
 
     protected String polygonToString(Polygon polygon) {
