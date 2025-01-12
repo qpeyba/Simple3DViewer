@@ -40,7 +40,7 @@ import com.cgvsu.render_engine.Camera;
 
 public class GuiController {
 
-    final private float TRANSLATION = 2F;
+    final private float TRANSLATION = 0.5F;
   
     @FXML
     AnchorPane anchorPane;
@@ -50,7 +50,8 @@ public class GuiController {
 
     private Model mesh = null;
 
-    final private float ASPECT_RATIO = 1.4F;
+    final private float ASPECT_RATIO = (float) Math.sqrt(2);
+    // final private float ASPECT_RATIO = 16.0F / 9.0F;
 
     private Camera camera = new Camera(
             new Vec2((float)(Math.PI), (float)(-Math.PI/2)),
@@ -66,33 +67,41 @@ public class GuiController {
     private Vec3 currentScale = new Vec3(1, 1, 1);
 
     @FXML
-    private ListView<Camera> listView;
+    private ListView<?> listViewModels;
+
+    @FXML
+    private ListView<Camera> listViewCameras;
     private List<Camera> cameras = new ArrayList<>();
     private Camera currentCamera;
 
 
     @FXML
     private void initialize() {
-
-        canvas.setWidth(1280);
+        canvas.setWidth(720 * ASPECT_RATIO);
         canvas.setHeight(720); 
 
-        anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> {
-                canvas.setWidth(newValue.doubleValue());
-                canvas.setHeight(newValue.doubleValue() / ASPECT_RATIO);
-        });
+
+        // 1.1
+        // anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> {
+        //         canvas.setWidth(newValue.doubleValue() );
+        //         canvas.setHeight(newValue.doubleValue() / ASPECT_RATIO);
+        // });
     
+        //1.2
         anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> {
                 canvas.setHeight(newValue.doubleValue());
                 canvas.setWidth(newValue.doubleValue() * ASPECT_RATIO);
         });
 
+
+        // 2 
         // anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> {
         //         double availableWidth = newValue.doubleValue();
         //         canvas.setWidth(availableWidth);
-        //         canvas.setHeight((availableWidth / ASPECT_RATIO));
+        //         canvas.setHeight((availableWidth) / ASPECT_RATIO);
         // });
 
+        //3
         // anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
         // anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> canvas.setHeight(newValue.doubleValue()));
         
@@ -127,16 +136,16 @@ public class GuiController {
 
         currentCamera = camera;
         cameras.add(camera);
-        listView.setItems(FXCollections.observableArrayList(cameras));
+        listViewCameras.setItems(FXCollections.observableArrayList(cameras));
     
-        listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+        listViewCameras.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 currentCamera = newValue;
                 camera = newValue;
             }
         });
 
-        listView.setCellFactory(param -> new ListCell<>() {
+        listViewCameras.setCellFactory(param -> new ListCell<>() {
             @Override
             protected void updateItem(Camera item, boolean empty) {
                 super.updateItem(item, empty);
@@ -556,13 +565,13 @@ public class GuiController {
         );
         
         cameras.add(newCamera);
-        listView.setItems(FXCollections.observableArrayList(cameras));
-        listView.getSelectionModel().select(newCamera);
+        listViewCameras.setItems(FXCollections.observableArrayList(cameras));
+        listViewCameras.getSelectionModel().select(newCamera);
     }
     
     @FXML
     void removeCamera(MouseEvent event) {
-        Camera selectedCamera = listView.getSelectionModel().getSelectedItem();
+        Camera selectedCamera = listViewCameras.getSelectionModel().getSelectedItem();
         
         if (selectedCamera == null) {
             showError("Error", "No camera selected");
@@ -575,10 +584,20 @@ public class GuiController {
         }
         
         cameras.remove(selectedCamera);
-        listView.setItems(FXCollections.observableArrayList(cameras));
+        listViewCameras.setItems(FXCollections.observableArrayList(cameras));
         
         if (selectedCamera == currentCamera) {
-            listView.getSelectionModel().select(0);
+            listViewCameras.getSelectionModel().select(0);
         }
+    }
+
+    @FXML
+    void addModel(MouseEvent event) {
+
+    }
+
+    @FXML
+    void removeModel(MouseEvent event) {
+
     }
 }
