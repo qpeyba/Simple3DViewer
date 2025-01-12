@@ -257,7 +257,7 @@ public class GuiController {
     
     @FXML
     void applyTransformation(MouseEvent event) {
-        if (mesh == null) return;
+        if (currentModel == null) return;
     
         try {
             String[] translateValues = inputForModelMoving.getText().split("\\s+");
@@ -331,7 +331,7 @@ public class GuiController {
     
     @FXML
     void resetTransformation(MouseEvent event) {
-        if (mesh == null) return;
+        if (currentModel == null) return;
         
         Transformation resetTransformation = new Transformation(
             new Scaling(1/accumulatedScale.x(), 1/accumulatedScale.y(), 1/accumulatedScale.z()),
@@ -509,7 +509,7 @@ public class GuiController {
     }
 
     private void handleVertexRemoval() {
-        if (mesh == null) {
+        if (currentModel == null) {
             showError("No model loaded", "Please load a model first before trying to remove vertices.");
             return;
         }
