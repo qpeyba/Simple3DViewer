@@ -9,6 +9,7 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
@@ -16,13 +17,14 @@
 <?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
 <AnchorPane fx:id="anchorPane" prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cgvsu.GuiController">
 
-    <Canvas fx:id="canvas" height="720.0" layoutX="206.0" layoutY="3.0" width="1280.0" AnchorPane.topAnchor="3.0" />
+    <Canvas fx:id="canvas" height="723.0" layoutX="206.0" width="1280.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
     <MenuBar layoutY="5.0" prefHeight="25.0" prefWidth="206.0">
         <Menu mnemonicParsing="false" text="File">
             <MenuItem mnemonicParsing="false" onAction="#onOpenModelMenuItemClick" text="Load Model">
@@ -32,29 +34,39 @@
             </MenuItem>
          <MenuItem mnemonicParsing="false" onAction="#onSaveModelMenuItemClick" text="Save Model">
             <accelerator>
-               <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+               <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
             </accelerator>
          </MenuItem>
         </Menu>
         <Menu mnemonicParsing="false" text="Controls">
-            <MenuItem mnemonicParsing="false" onAction="#handleCameraForward" text="Forward">
+            <MenuItem mnemonicParsing="false" onAction="#handleCameraForward" text="Move Forward">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="W" control="UP" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
             </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#handleCameraBackward" text="Backward">
+            <MenuItem mnemonicParsing="false" onAction="#handleCameraBackward" text="Move Backward">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="S" control="UP" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
             </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#handleCameraLeft" text="Left">
+            <MenuItem mnemonicParsing="false" onAction="#moveCameraLeft" text="Move Left">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="A" control="UP" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
             </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#handleCameraRight" text="Right">
+            <MenuItem mnemonicParsing="false" onAction="#moveCameraRight" text="Move Right">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="D" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                </accelerator>
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#handleCameraLeft" text="Left">
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="A" control="UP" meta="UP" shift="DOWN" shortcut="UP" />
+                </accelerator>
+            </MenuItem>
+            <MenuItem mnemonicParsing="false" onAction="#handleCameraRight" text="Right">
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="D" control="UP" meta="UP" shift="DOWN" shortcut="UP" />
                 </accelerator>
             </MenuItem>
             <MenuItem mnemonicParsing="false" onAction="#handleCameraUp" text="Up">
@@ -67,12 +79,12 @@
                     <KeyCodeCombination alt="UP" code="S" control="UP" meta="UP" shift="DOWN" shortcut="UP" />
                 </accelerator>
             </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#moveCameraUp" text="moveUp">
+            <MenuItem mnemonicParsing="false" onAction="#moveCameraUp" text="Move Up">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="W" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
             </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#moveCameraDown" text="moveDown">
+            <MenuItem mnemonicParsing="false" onAction="#moveCameraDown" text="Move Down">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
@@ -177,6 +189,25 @@
             </TitledPane>
             </panes>
          </Accordion>
+      </children>
+   </Pane>
+   <Pane layoutY="671.0" prefHeight="52.0" prefWidth="297.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
+      <children>
+         <HBox prefHeight="51.0" prefWidth="200.0">
+            <children>
+               <ListView fx:id="listView" prefHeight="38.0" prefWidth="200.0" />
+            </children>
+         </HBox>
+         <Button layoutX="211.0" layoutY="11.0" mnemonicParsing="false" onMouseClicked="#addCamera" prefHeight="30.0" prefWidth="31.0" text="+">
+            <font>
+               <Font size="14.0" />
+            </font>
+         </Button>
+         <Button layoutX="253.0" layoutY="11.0" mnemonicParsing="false" onMouseClicked="#removeCamera" prefHeight="30.0" prefWidth="31.0" text="-" textAlignment="CENTER">
+            <font>
+               <Font size="14.0" />
+            </font>
+         </Button>
       </children>
    </Pane>
 </AnchorPane>

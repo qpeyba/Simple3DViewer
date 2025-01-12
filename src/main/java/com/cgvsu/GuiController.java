@@ -9,9 +9,11 @@ import io.github.alphameo.linear_algebra.vec.Vec3;
 import io.github.alphameo.linear_algebra.vec.Vector2;
 import io.github.alphameo.linear_algebra.vec.Vector3;
 import javafx.fxml.FXML;
+import javafx.geometry.Orientation;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
@@ -62,6 +64,11 @@ public class GuiController {
     private Vec3 currentTranslation = new Vec3(0, 0, 0);
     private Vec3 currentRotation = new Vec3(0, 0, 0);
     private Vec3 currentScale = new Vec3(1, 1, 1);
+
+    @FXML
+    private ListView<Camera> listView;
+    private List<Camera> cameras = new ArrayList<>();
+    private Camera currentCamera;
 
 
     @FXML
@@ -117,7 +124,29 @@ public class GuiController {
         inputForModelMoving.setText("0.0 0.0 0.0");
         inputForModelRotation.setText("0.0 0.0 0.0");
         inputForModelScaling.setText("1.0 1.0 1.0");
+
+        currentCamera = camera;
+        cameras.add(camera);
+        listView.setItems(FXCollections.observableArrayList(cameras));
     
+        listView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                currentCamera = newValue;
+                camera = newValue;
+            }
+        });
+
+        listView.setCellFactory(param -> new ListCell<>() {
+            @Override
+            protected void updateItem(Camera item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText("Camera " + (cameras.indexOf(item) + 1));
+                }
+            }
+        });
     }
 
     private void updateTransformationFields() {
@@ -334,6 +363,15 @@ public class GuiController {
     }
 
     @FXML
+    public void moveCameraLeft(ActionEvent actionEvent) {
+        camera.moveTarget(new Vec3(-TRANSLATION/2, 0, 0));
+    }
+    @FXML
+    public void moveCameraRight(ActionEvent actionEvent) {
+        camera.moveTarget(new Vec3(TRANSLATION/2, 0, 0));
+    }
+
+    @FXML
     private TextField VerticesToRemove;
     @FXML
     private Button vertexRemoverButton;
@@ -503,5 +541,44 @@ public class GuiController {
         alert.setHeaderText(null);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+
+    @FXML
+    void addCamera(MouseEvent event) {
+        Camera newCamera = new Camera(
+            new Vec2((float)(Math.PI), (float)(-Math.PI/2)),
+            100f,
+            new Vec3(0, 0, 0),
+            1.0F, 
+            ASPECT_RATIO, 
+            0.01F, 
+            100
+        );
+        
+        cameras.add(newCamera);
+        listView.setItems(FXCollections.observableArrayList(cameras));
+        listView.getSelectionModel().select(newCamera);
+    }
+    
+    @FXML
+    void removeCamera(MouseEvent event) {
+        Camera selectedCamera = listView.getSelectionModel().getSelectedItem();
+        
+        if (selectedCamera == null) {
+            showError("Error", "No camera selected");
+            return;
+        }
+        
+        if (cameras.size() <= 1) {
+            showError("Error", "Cannot remove last camera");
+            return;
+        }
+        
+        cameras.remove(selectedCamera);
+        listView.setItems(FXCollections.observableArrayList(cameras));
+        
+        if (selectedCamera == currentCamera) {
+            listView.getSelectionModel().select(0);
+        }
     }
 }
