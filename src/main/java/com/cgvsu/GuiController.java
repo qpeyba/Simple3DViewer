@@ -40,7 +40,7 @@ import com.cgvsu.render_engine.Camera;
 
 public class GuiController {
 
-    final private float TRANSLATION = 0.5F;
+    final private float TRANSLATION = 2F;
   
     @FXML
     AnchorPane anchorPane;
@@ -67,7 +67,9 @@ public class GuiController {
     private Vec3 currentScale = new Vec3(1, 1, 1);
 
     @FXML
-    private ListView<?> listViewModels;
+    private ListView<Model> listViewModels;
+    private List<Model> models = new ArrayList<>();
+    private Model currentModel;
 
     @FXML
     private ListView<Camera> listViewCameras;
@@ -154,6 +156,26 @@ public class GuiController {
                 } else {
                     setText("Camera " + (cameras.indexOf(item) + 1));
                 }
+            }
+        });
+
+        listViewModels.setCellFactory(param -> new ListCell<>() {
+            @Override
+            protected void updateItem(Model item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText("Model " + (models.indexOf(item) + 1));
+                }
+            }
+        });
+
+        listViewModels.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                currentModel = newValue;
+                mesh = currentModel;
+                updateTransformationFields();
             }
         });
     }
@@ -593,11 +615,47 @@ public class GuiController {
 
     @FXML
     void addModel(MouseEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(
+            new FileChooser.ExtensionFilter("Model (*.obj)", "*.obj")
+        );
+        fileChooser.setTitle("Load Model");
 
+        File file = fileChooser.showOpenDialog((Stage) canvas.getScene().getWindow());
+        if (file == null) {
+            return;
+        }
+
+        try {
+            String fileContent = Files.readString(Path.of(file.getAbsolutePath()));
+            Model newModel = ObjReader.read(fileContent);
+            models.add(newModel);
+            listViewModels.setItems(FXCollections.observableArrayList(models));
+            listViewModels.getSelectionModel().select(newModel);
+        } catch (Exception e) {
+            showError("Model Loading Error", "Failed to load model: " + e.getMessage());
+        }
     }
 
     @FXML
     void removeModel(MouseEvent event) {
-
+        Model selectedModel = listViewModels.getSelectionModel().getSelectedItem();
+        
+        if (selectedModel == null) {
+            showError("Error", "No model selected");
+            return;
+        }
+        
+        if (models.size() <= 1) {
+            showError("Error", "Cannot remove last model");
+            return;
+        }
+        
+        models.remove(selectedModel);
+        listViewModels.setItems(FXCollections.observableArrayList(models));
+        
+        if (selectedModel == currentModel) {
+            listViewModels.getSelectionModel().select(0);
+        }
     }
 }
