@@ -32,6 +32,7 @@ import io.github.shimeoki.jfx.rasterization.Colorf;
 import com.cgvsu.VertexDelete.Eraser;
 import com.cgvsu.model.Model;
 import com.cgvsu.obj_io.reader.ObjReader;
+import com.cgvsu.obj_io.reader.ObjReaderException;
 import com.cgvsu.obj_io.writer.ObjWriter;
 import com.cgvsu.render_engine.Camera;
 
@@ -128,22 +129,52 @@ public class GuiController {
     @FXML
     private void onOpenModelMenuItemClick() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Model (*.obj)", "*.obj"));
+        fileChooser.getExtensionFilters().add(
+            new FileChooser.ExtensionFilter("Model (*.obj)", "*.obj")
+        );
         fileChooser.setTitle("Load Model");
-
+    
         File file = fileChooser.showOpenDialog((Stage) canvas.getScene().getWindow());
         if (file == null) {
             return;
         }
-
+    
         Path fileName = Path.of(file.getAbsolutePath());
-
+    
         try {
             String fileContent = Files.readString(fileName);
             mesh = ObjReader.read(fileContent);
-            // todo: обработка ошибок
-        } catch (IOException exception) {
+        } catch (IOException e) {
+            showError("File Error", "Failed to read file: " + e.getMessage());
+        } catch (ObjReaderException e) {
+            showError("Model Error", "Invalid model format: " + e.getMessage());
+        } catch (Exception e) {
+            showError("Error", "An unexpected error occurred: " + e.getMessage());
+        }
+    }
 
+    @FXML
+    private void onSaveModelMenuItemClick() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(
+            new FileChooser.ExtensionFilter("Model (*.obj)", "*.obj")
+        );
+        fileChooser.setTitle("Save Model");
+    
+        File file = fileChooser.showSaveDialog((Stage) canvas.getScene().getWindow());
+        if (file == null) {
+            return;
+        }
+
+        if (mesh == null) {
+            showError("Save Error", "No model loaded to save");
+            return;
+        }
+        try {
+            ObjWriter writer = new ObjWriter();
+            writer.write(mesh, file.getAbsolutePath());
+        } catch (Exception e) {
+            showError("Save Error", "Error saving file: " + e.getMessage());
         }
     }
     @FXML
@@ -295,27 +326,6 @@ public class GuiController {
     @FXML
     public void moveCameraDown(ActionEvent actionEvent) {
         camera.moveTarget(new Vec3(0, -TRANSLATION/2, 0));
-    }
-
-    @FXML
-    private void onSaveModelMenuItemClick() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.getExtensionFilters().add(
-            new FileChooser.ExtensionFilter("Model (*.obj)", "*.obj")
-        );
-        fileChooser.setTitle("Save Model");
-    
-        File file = fileChooser.showSaveDialog((Stage) canvas.getScene().getWindow());
-        if (file == null) {
-            return;
-        }
-    
-        try {
-            ObjWriter writer = new ObjWriter();
-            writer.write(mesh, file.getAbsolutePath());
-        } catch (Exception e) {
-            System.out.println("Error saving file: " + e.getMessage());
-        }
     }
 
     @FXML
