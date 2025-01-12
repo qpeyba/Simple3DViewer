@@ -5,6 +5,8 @@ import com.cgvsu.math.Vector3f;
 import com.cgvsu.model.Model;
 import com.cgvsu.model.Polygon;
 
+import io.github.alphameo.linear_algebra.vec.Vec2;
+import io.github.alphameo.linear_algebra.vec.Vec3;
 import io.github.shimeoki.jshaper.ObjFile;
 import io.github.shimeoki.jshaper.obj.ModelReader;
 import io.github.shimeoki.jshaper.obj.Reader;
@@ -30,7 +32,7 @@ public class ObjReader {
             ObjFile objFile = reader.read(tempFile);
             
             for (Vertex vertex : objFile.vertexData().vertices()) {
-                result.vertices.add(new Vector3f(
+                result.vertices.add(new Vec3(
                     vertex.x(),
                     vertex.y(),
                     vertex.z()
@@ -38,14 +40,14 @@ public class ObjReader {
             }
             
             for (TextureVertex texVertex : objFile.vertexData().textureVertices()) {
-                result.textureVertices.add(new Vector2f(
+                result.textureVertices.add(new Vec2(
                     texVertex.u(),
                     texVertex.v()
                 ));
             }
             
             for (VertexNormal normal : objFile.vertexData().vertexNormals()) {
-                result.normals.add(new Vector3f(
+                result.normals.add(new Vec3(
                     normal.i(),
                     normal.j(), 
                     normal.k()
@@ -75,6 +77,9 @@ public class ObjReader {
                 polygon.setNormalIndices(normalIndices);
                 result.polygons.add(polygon);
             }
+            //триангуляция и перерасчет нормалей модели
+            result.triangulate();
+            result.computeNormals();
 
             tempFile.delete();
             
