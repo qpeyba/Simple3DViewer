@@ -34,7 +34,7 @@
             </MenuItem>
          <MenuItem mnemonicParsing="false" onAction="#onSaveModelMenuItemClick" text="Save Model">
             <accelerator>
-               <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+               <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
             </accelerator>
          </MenuItem>
         </Menu>
