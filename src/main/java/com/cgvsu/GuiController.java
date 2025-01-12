@@ -112,6 +112,11 @@ public class GuiController {
         vertexRemoverButton.setOnAction(event -> handleVertexRemoval());
 
         updateTransformationFields();
+
+        inputForModelMoving.setText("0.0 0.0 0.0");
+        inputForModelRotation.setText("0.0 0.0 0.0");
+        inputForModelScaling.setText("1.0 1.0 1.0");
+    
     }
 
     private void updateTransformationFields() {
