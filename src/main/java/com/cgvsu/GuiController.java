@@ -208,7 +208,14 @@ public class GuiController {
     
         try {
             String fileContent = Files.readString(fileName);
-            mesh = ObjReader.read(fileContent);
+            Model newModel = ObjReader.read(fileContent);
+
+            models.add(newModel);
+            listViewModels.setItems(FXCollections.observableArrayList(models));
+            listViewModels.getSelectionModel().select(newModel);
+
+            currentModel = newModel;
+            mesh = newModel;
         } catch (IOException e) {
             showError("File Error", "Failed to read file: " + e.getMessage());
         } catch (ObjReaderException e) {
