@@ -41,7 +41,7 @@ import com.cgvsu.render_engine.Camera;
 public class GuiController {
 
     final private float TRANSLATION = 2F;
-  
+
     @FXML
     AnchorPane anchorPane;
 
@@ -54,7 +54,7 @@ public class GuiController {
     // final private float ASPECT_RATIO = 16.0F / 9.0F;
 
     private Camera camera = new Camera(
-            new Vec2((float)(Math.PI), (float)(-Math.PI/2)),
+            new Vec2((float) (Math.PI), (float) (-Math.PI / 2)),
             100f,
             new Vec3(0, 0, 0),
             1.0F, ASPECT_RATIO, 0.01F, 100);
@@ -76,37 +76,36 @@ public class GuiController {
     private List<Camera> cameras = new ArrayList<>();
     private Camera currentCamera;
 
-
     @FXML
     private void initialize() {
         canvas.setWidth(720 * ASPECT_RATIO);
-        canvas.setHeight(720); 
-
+        canvas.setHeight(720);
 
         // 1.1
         // anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> {
-        //         canvas.setWidth(newValue.doubleValue() );
-        //         canvas.setHeight(newValue.doubleValue() / ASPECT_RATIO);
+        // canvas.setWidth(newValue.doubleValue() );
+        // canvas.setHeight(newValue.doubleValue() / ASPECT_RATIO);
         // });
-    
-        //1.2
+
+        // 1.2
         anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> {
-                canvas.setHeight(newValue.doubleValue());
-                canvas.setWidth(newValue.doubleValue() * ASPECT_RATIO);
+            canvas.setHeight(newValue.doubleValue());
+            canvas.setWidth(newValue.doubleValue() * ASPECT_RATIO);
         });
 
-
-        // 2 
+        // 2
         // anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> {
-        //         double availableWidth = newValue.doubleValue();
-        //         canvas.setWidth(availableWidth);
-        //         canvas.setHeight((availableWidth) / ASPECT_RATIO);
+        // double availableWidth = newValue.doubleValue();
+        // canvas.setWidth(availableWidth);
+        // canvas.setHeight((availableWidth) / ASPECT_RATIO);
         // });
 
-        //3
-        // anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
-        // anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> canvas.setHeight(newValue.doubleValue()));
-        
+        // 3
+        // anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) ->
+        // canvas.setWidth(newValue.doubleValue()));
+        // anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) ->
+        // canvas.setHeight(newValue.doubleValue()));
+
         timeline = new Timeline();
         timeline.setCycleCount(Animation.INDEFINITE);
 
@@ -117,21 +116,22 @@ public class GuiController {
             canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
             camera.setAspectRatio((float) (width / height));
 
-            // if (mesh != null) {
-            //     if (color!=null){
-            //         PolygonFiller.fillPolygon(canvas.getGraphicsContext2D(), camera, mesh, (int) width, (int) height, color);
-            //     }else{
-            //         RenderEngine.render(canvas.getGraphicsContext2D(), camera, mesh, (int) width, (int) height);
-            //     }            }
+            if (mesh != null) {
+                if (color != null) {
+                    PolygonFiller.fillPolygon(canvas.getGraphicsContext2D(), camera, mesh, (int) width, (int) height,
+                            color);
+                } else {
+                    RenderEngine.render(canvas.getGraphicsContext2D(), camera, mesh, (int) width, (int) height);
+                }
+            }
 
             for (Model model : models) {
                 RenderEngine.render(
-                    canvas.getGraphicsContext2D(), 
-                    camera,
-                    model,
-                    (int) width,
-                    (int) height
-                );
+                        canvas.getGraphicsContext2D(),
+                        camera,
+                        model,
+                        (int) width,
+                        (int) height);
             }
 
         });
@@ -150,7 +150,7 @@ public class GuiController {
         currentCamera = camera;
         cameras.add(camera);
         listViewCameras.setItems(FXCollections.observableArrayList(cameras));
-    
+
         listViewCameras.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 currentCamera = newValue;
@@ -192,31 +192,32 @@ public class GuiController {
     }
 
     private void updateTransformationFields() {
-        inputForModelMoving.setText(String.format("%.1f %.1f %.1f", 
-            currentTranslation.x(), currentTranslation.y(), currentTranslation.z()));
-            
+        inputForModelMoving.setText(String.format("%.1f %.1f %.1f",
+                currentTranslation.x(), currentTranslation.y(), currentTranslation.z()));
+
         inputForModelRotation.setText(String.format("%.1f %.1f %.1f",
-            currentRotation.x(), currentRotation.y(), currentRotation.z()));
-            
+                currentRotation.x(), currentRotation.y(), currentRotation.z()));
+
         inputForModelScaling.setText(String.format("%.1f %.1f %.1f",
-            currentScale.x(), currentScale.y(), currentScale.z()));
+                currentScale.x(), currentScale.y(), currentScale.z()));
     }
 
+
+    private boolean firstModelLoaded = false;
     @FXML
     private void onOpenModelMenuItemClick() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(
-            new FileChooser.ExtensionFilter("Model (*.obj)", "*.obj")
-        );
+                new FileChooser.ExtensionFilter("Model (*.obj)", "*.obj"));
         fileChooser.setTitle("Load Model");
-    
+
         File file = fileChooser.showOpenDialog((Stage) canvas.getScene().getWindow());
         if (file == null) {
             return;
         }
-    
+
         Path fileName = Path.of(file.getAbsolutePath());
-    
+
         try {
             String fileContent = Files.readString(fileName);
             Model newModel = ObjReader.read(fileContent);
@@ -224,6 +225,11 @@ public class GuiController {
             models.add(newModel);
             listViewModels.setItems(FXCollections.observableArrayList(models));
             listViewModels.getSelectionModel().select(newModel);
+
+            if (!firstModelLoaded) {
+                camera.moveDistance(5 * TRANSLATION);
+                firstModelLoaded = true;
+            }
 
             // currentModel = newModel;
             // mesh = newModel;
@@ -240,10 +246,9 @@ public class GuiController {
     private void onSaveModelMenuItemClick() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(
-            new FileChooser.ExtensionFilter("Model (*.obj)", "*.obj")
-        );
+                new FileChooser.ExtensionFilter("Model (*.obj)", "*.obj"));
         fileChooser.setTitle("Save Model");
-    
+
         File file = fileChooser.showSaveDialog((Stage) canvas.getScene().getWindow());
         if (file == null) {
             return;
@@ -260,6 +265,7 @@ public class GuiController {
             showError("Save Error", "Error saving file: " + e.getMessage());
         }
     }
+
     @FXML
     private TextField inputForModelMoving;
 
@@ -272,66 +278,60 @@ public class GuiController {
     private Vec3 accumulatedTranslation = new Vec3(0, 0, 0);
     private Vec3 accumulatedRotation = new Vec3(0, 0, 0);
     private Vec3 accumulatedScale = new Vec3(1, 1, 1);
-    
+
     @FXML
     void applyTransformation(MouseEvent event) {
-        if (currentModel == null) return;
-    
+        if (currentModel == null)
+            return;
+
         try {
             String[] translateValues = inputForModelMoving.getText().split("\\s+");
             String[] rotateValues = inputForModelRotation.getText().split("\\s+");
             String[] scaleValues = inputForModelScaling.getText().split("\\s+");
-    
+
             Vec3 translation = new Vec3(
-                Float.parseFloat(translateValues[0]),
-                Float.parseFloat(translateValues[1]),
-                Float.parseFloat(translateValues[2])
-            );
-    
+                    Float.parseFloat(translateValues[0]),
+                    Float.parseFloat(translateValues[1]),
+                    Float.parseFloat(translateValues[2]));
+
             Vec3 rotation = new Vec3(
-                Float.parseFloat(rotateValues[0]),
-                Float.parseFloat(rotateValues[1]),
-                Float.parseFloat(rotateValues[2])
-            );
-    
+                    Float.parseFloat(rotateValues[0]),
+                    Float.parseFloat(rotateValues[1]),
+                    Float.parseFloat(rotateValues[2]));
+
             Vec3 scale = new Vec3(
-                Float.parseFloat(scaleValues[0]),
-                Float.parseFloat(scaleValues[1]),
-                Float.parseFloat(scaleValues[2])
-            );
-    
+                    Float.parseFloat(scaleValues[0]),
+                    Float.parseFloat(scaleValues[1]),
+                    Float.parseFloat(scaleValues[2]));
+
             Transformation transformation = new Transformation(
-                new Translator(translation.x(), translation.y(), translation.z()),
-                new Rotator(rotation.x(), Rotator.Axis.X),
-                new Rotator(rotation.y(), Rotator.Axis.Y),
-                new Rotator(rotation.z(), Rotator.Axis.Z),
-                new Scaling(scale.x(), scale.y(), scale.z())
-            );
-    
+                    new Translator(translation.x(), translation.y(), translation.z()),
+                    new Rotator(rotation.x(), Rotator.Axis.X),
+                    new Rotator(rotation.y(), Rotator.Axis.Y),
+                    new Rotator(rotation.z(), Rotator.Axis.Z),
+                    new Scaling(scale.x(), scale.y(), scale.z()));
+
             mesh.vertices = new ArrayList<>(transformation.transform(mesh.vertices));
-    
+
             accumulatedTranslation = new Vec3(
-                accumulatedTranslation.x() + translation.x(),
-                accumulatedTranslation.y() + translation.y(),
-                accumulatedTranslation.z() + translation.z()
-            );
-    
+                    accumulatedTranslation.x() + translation.x(),
+                    accumulatedTranslation.y() + translation.y(),
+                    accumulatedTranslation.z() + translation.z());
+
             accumulatedRotation = new Vec3(
-                accumulatedRotation.x() + rotation.x(),
-                accumulatedRotation.y() + rotation.y(),
-                accumulatedRotation.z() + rotation.z()
-            );
-    
+                    accumulatedRotation.x() + rotation.x(),
+                    accumulatedRotation.y() + rotation.y(),
+                    accumulatedRotation.z() + rotation.z());
+
             accumulatedScale = new Vec3(
-                accumulatedScale.x() * scale.x(),
-                accumulatedScale.y() * scale.y(),
-                accumulatedScale.z() * scale.z()
-            );
-    
+                    accumulatedScale.x() * scale.x(),
+                    accumulatedScale.y() * scale.y(),
+                    accumulatedScale.z() * scale.z());
+
             currentTranslation = translation;
             currentRotation = rotation;
             currentScale = scale;
-    
+
         } catch (NumberFormatException e) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Input Error");
@@ -346,32 +346,32 @@ public class GuiController {
             alert.showAndWait();
         }
     }
-    
+
     @FXML
     void resetTransformation(MouseEvent event) {
-        if (currentModel == null) return;
-        
+        if (currentModel == null)
+            return;
+
         Transformation resetTransformation = new Transformation(
-            new Scaling(1/accumulatedScale.x(), 1/accumulatedScale.y(), 1/accumulatedScale.z()),
-            new Rotator(-accumulatedRotation.z(), Rotator.Axis.Z),
-            new Rotator(-accumulatedRotation.y(), Rotator.Axis.Y),
-            new Rotator(-accumulatedRotation.x(), Rotator.Axis.X),
-            new Translator(-accumulatedTranslation.x(), -accumulatedTranslation.y(), -accumulatedTranslation.z())
-            );
+                new Scaling(1 / accumulatedScale.x(), 1 / accumulatedScale.y(), 1 / accumulatedScale.z()),
+                new Rotator(-accumulatedRotation.z(), Rotator.Axis.Z),
+                new Rotator(-accumulatedRotation.y(), Rotator.Axis.Y),
+                new Rotator(-accumulatedRotation.x(), Rotator.Axis.X),
+                new Translator(-accumulatedTranslation.x(), -accumulatedTranslation.y(), -accumulatedTranslation.z()));
         mesh.vertices = new ArrayList<>(resetTransformation.transform(mesh.vertices));
-    
+
         currentTranslation = new Vec3(0, 0, 0);
         currentRotation = new Vec3(0, 0, 0);
         currentScale = new Vec3(1, 1, 1);
         accumulatedTranslation = new Vec3(0, 0, 0);
         accumulatedRotation = new Vec3(0, 0, 0);
         accumulatedScale = new Vec3(1, 1, 1);
-    
+
         inputForModelMoving.setText("0.0 0.0 0.0");
         inputForModelRotation.setText("0.0 0.0 0.0");
         inputForModelScaling.setText("1.0 1.0 1.0");
     }
-    
+
     @FXML
     public void handleCameraForward(ActionEvent actionEvent) {
         camera.moveDistance(-TRANSLATION);
@@ -384,40 +384,42 @@ public class GuiController {
 
     @FXML
     public void handleCameraLeft(ActionEvent actionEvent) {
-        camera.moveRotation(new Vec2(TRANSLATION/100, 0));
+        camera.moveRotation(new Vec2(TRANSLATION / 100, 0));
     }
 
     @FXML
     public void handleCameraRight(ActionEvent actionEvent) {
-        camera.moveRotation(new Vec2(-TRANSLATION/100, 0));
+        camera.moveRotation(new Vec2(-TRANSLATION / 100, 0));
     }
 
     @FXML
     public void handleCameraUp(ActionEvent actionEvent) {
-        camera.moveRotation(new Vec2(0, TRANSLATION/100));
+        camera.moveRotation(new Vec2(0, TRANSLATION / 100));
     }
 
     @FXML
     public void handleCameraDown(ActionEvent actionEvent) {
-        camera.moveRotation(new Vec2(0, -TRANSLATION/100));
+        camera.moveRotation(new Vec2(0, -TRANSLATION / 100));
     }
 
     @FXML
     public void moveCameraUp(ActionEvent actionEvent) {
-        camera.moveTarget(new Vec3(0, TRANSLATION/2, 0));
+        camera.moveTarget(new Vec3(0, TRANSLATION / 2, 0));
     }
+
     @FXML
     public void moveCameraDown(ActionEvent actionEvent) {
-        camera.moveTarget(new Vec3(0, -TRANSLATION/2, 0));
+        camera.moveTarget(new Vec3(0, -TRANSLATION / 2, 0));
     }
 
     @FXML
     public void moveCameraLeft(ActionEvent actionEvent) {
-        camera.moveTarget(new Vec3(-TRANSLATION/2, 0, 0));
+        camera.moveTarget(new Vec3(-TRANSLATION / 2, 0, 0));
     }
+
     @FXML
     public void moveCameraRight(ActionEvent actionEvent) {
-        camera.moveTarget(new Vec3(TRANSLATION/2, 0, 0));
+        camera.moveTarget(new Vec3(TRANSLATION / 2, 0, 0));
     }
 
     @FXML
@@ -438,63 +440,65 @@ public class GuiController {
     @FXML
     private ComboBox<String> colorPicker;
 
-//    @FXML
-//    private void handleColorPolygon(ActionEvent actionEvent) {
-//
-//        if (mesh == null) {
-//            showError("No model loaded", "Please load a model first before applying colors.");
-//            return;
-//        }
-//
-//        String selectedColor = colorPicker.getValue();
-//        if (selectedColor == null) {
-//            showError("No color selected", "Please select a color to apply.");
-//            return;
-//        }
-//
-//        switch (selectedColor.toLowerCase()) {
-//            case "red":
-//                color = new Colorf(1.0f, 0.0f, 0.0f, 1.0F);
-//                break;
-//            case "green":
-//                color = new Colorf(0.0f, 1.0f, 0.0f, 1.0F);
-//                break;
-//            case "blue":
-//                color = new Colorf(0.0f, 0.0f, 1.0f, 1.0F);
-//                break;
-//            case "yellow":
-//                color = new Colorf(1.0f, 1.0f, 0.0f, 1.0F);
-//                break;
-//            case "white":
-//                color = new Colorf(1.0f, 1.0f, 1.0f, 1.0F);
-//                break;
-//            default:
-//                color = new Colorf(0.0f, 0.0f, 0.0f, 1.0F); // Черный цвет по умолчанию
-//                break;
-//        }
-//
-//        timeline = new Timeline();
-//        timeline.setCycleCount(Animation.INDEFINITE);
-//
-//        KeyFrame frame = new KeyFrame(Duration.millis(15), event -> {
-//            double width = canvas.getWidth();
-//            double height = canvas.getHeight();
-//
-//            canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
-//            camera.setAspectRatio((float) (width / height));
-//
-//            if (mesh != null) {
-//                PolygonFiller.fillPolygon(canvas.getGraphicsContext2D(), camera, mesh, (int) width, (int) height, color);
-//            }
-//        });
-//
-//        timeline.getKeyFrames().add(frame);
-//        timeline.play();
-//
-//        vertexRemoverButton.setOnAction(event -> handleVertexRemoval());
-//    }
+    // @FXML
+    // private void handleColorPolygon(ActionEvent actionEvent) {
+    //
+    // if (mesh == null) {
+    // showError("No model loaded", "Please load a model first before applying
+    // colors.");
+    // return;
+    // }
+    //
+    // String selectedColor = colorPicker.getValue();
+    // if (selectedColor == null) {
+    // showError("No color selected", "Please select a color to apply.");
+    // return;
+    // }
+    //
+    // switch (selectedColor.toLowerCase()) {
+    // case "red":
+    // color = new Colorf(1.0f, 0.0f, 0.0f, 1.0F);
+    // break;
+    // case "green":
+    // color = new Colorf(0.0f, 1.0f, 0.0f, 1.0F);
+    // break;
+    // case "blue":
+    // color = new Colorf(0.0f, 0.0f, 1.0f, 1.0F);
+    // break;
+    // case "yellow":
+    // color = new Colorf(1.0f, 1.0f, 0.0f, 1.0F);
+    // break;
+    // case "white":
+    // color = new Colorf(1.0f, 1.0f, 1.0f, 1.0F);
+    // break;
+    // default:
+    // color = new Colorf(0.0f, 0.0f, 0.0f, 1.0F); // Черный цвет по умолчанию
+    // break;
+    // }
+    //
+    // timeline = new Timeline();
+    // timeline.setCycleCount(Animation.INDEFINITE);
+    //
+    // KeyFrame frame = new KeyFrame(Duration.millis(15), event -> {
+    // double width = canvas.getWidth();
+    // double height = canvas.getHeight();
+    //
+    // canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
+    // camera.setAspectRatio((float) (width / height));
+    //
+    // if (mesh != null) {
+    // PolygonFiller.fillPolygon(canvas.getGraphicsContext2D(), camera, mesh, (int)
+    // width, (int) height, color);
+    // }
+    // });
+    //
+    // timeline.getKeyFrames().add(frame);
+    // timeline.play();
+    //
+    // vertexRemoverButton.setOnAction(event -> handleVertexRemoval());
+    // }
 
-    public void chooseColor(ActionEvent actionEvent){
+    public void chooseColor(ActionEvent actionEvent) {
         String selectedColor = colorPicker.getValue();
         if (selectedColor == null) {
             showError("No color selected", "Please select a color to apply.");
@@ -522,6 +526,7 @@ public class GuiController {
                 break;
         }
     }
+
     public void resetPolygonColor(ActionEvent actionEvent) {
         color = null;
     }
@@ -546,15 +551,15 @@ public class GuiController {
             boolean removePolygons = !checkboxRemovePolygons.isSelected();
 
             Model resultModel = Eraser.vertexDelete(
-                mesh,
-                verticesToRemove,
-                createNewModel,
-                removeNormals,
-                removeTextures,
-                removePolygons
-            );
+                    mesh,
+                    verticesToRemove,
+                    createNewModel,
+                    removeNormals,
+                    removeTextures,
+                    removePolygons);
 
-            if (createNewModel) { // I dont quite understand what this crap does, probably it needs implementation of several models (I'll figure it out later)
+            if (createNewModel) { // I dont quite understand what this crap does, probably it needs implementation
+                                  // of several models (I'll figure it out later)
                 mesh = resultModel;
             }
 
@@ -595,37 +600,36 @@ public class GuiController {
     @FXML
     void addCamera(MouseEvent event) {
         Camera newCamera = new Camera(
-            new Vec2((float)(Math.PI), (float)(-Math.PI/2)),
-            100f,
-            new Vec3(0, 0, 0),
-            1.0F, 
-            ASPECT_RATIO, 
-            0.01F, 
-            100
-        );
-        
+                new Vec2((float) (Math.PI), (float) (-Math.PI / 2)),
+                100f,
+                new Vec3(0, 0, 0),
+                1.0F,
+                ASPECT_RATIO,
+                0.01F,
+                100);
+
         cameras.add(newCamera);
         listViewCameras.setItems(FXCollections.observableArrayList(cameras));
         listViewCameras.getSelectionModel().select(newCamera);
     }
-    
+
     @FXML
     void removeCamera(MouseEvent event) {
         Camera selectedCamera = listViewCameras.getSelectionModel().getSelectedItem();
-        
+
         if (selectedCamera == null) {
             showError("Error", "No camera selected");
             return;
         }
-        
+
         if (cameras.size() <= 1) {
             showError("Error", "Cannot remove last camera");
             return;
         }
-        
+
         cameras.remove(selectedCamera);
         listViewCameras.setItems(FXCollections.observableArrayList(cameras));
-        
+
         if (selectedCamera == currentCamera) {
             listViewCameras.getSelectionModel().select(0);
         }
@@ -635,8 +639,7 @@ public class GuiController {
     void addModel(MouseEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(
-            new FileChooser.ExtensionFilter("Model (*.obj)", "*.obj")
-        );
+                new FileChooser.ExtensionFilter("Model (*.obj)", "*.obj"));
         fileChooser.setTitle("Load Model");
 
         File file = fileChooser.showOpenDialog((Stage) canvas.getScene().getWindow());
@@ -658,20 +661,20 @@ public class GuiController {
     @FXML
     void removeModel(MouseEvent event) {
         Model selectedModel = listViewModels.getSelectionModel().getSelectedItem();
-        
+
         if (selectedModel == null) {
             showError("Error", "No model selected");
             return;
         }
-        
+
         if (models.size() <= 1) {
             showError("Error", "Cannot remove last model");
             return;
         }
-        
+
         models.remove(selectedModel);
         listViewModels.setItems(FXCollections.observableArrayList(models));
-        
+
         if (selectedModel == currentModel) {
             listViewModels.getSelectionModel().select(0);
         }
