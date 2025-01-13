@@ -117,12 +117,23 @@ public class GuiController {
             canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
             camera.setAspectRatio((float) (width / height));
 
-            if (mesh != null) {
-                if (color!=null){
-                    PolygonFiller.fillPolygon(canvas.getGraphicsContext2D(), camera, mesh, (int) width, (int) height, color);
-                }else{
-                    RenderEngine.render(canvas.getGraphicsContext2D(), camera, mesh, (int) width, (int) height);
-                }            }
+            // if (mesh != null) {
+            //     if (color!=null){
+            //         PolygonFiller.fillPolygon(canvas.getGraphicsContext2D(), camera, mesh, (int) width, (int) height, color);
+            //     }else{
+            //         RenderEngine.render(canvas.getGraphicsContext2D(), camera, mesh, (int) width, (int) height);
+            //     }            }
+
+            for (Model model : models) {
+                RenderEngine.render(
+                    canvas.getGraphicsContext2D(), 
+                    camera,
+                    model,
+                    (int) width,
+                    (int) height
+                );
+            }
+
         });
 
         timeline.getKeyFrames().add(frame);
@@ -214,8 +225,8 @@ public class GuiController {
             listViewModels.setItems(FXCollections.observableArrayList(models));
             listViewModels.getSelectionModel().select(newModel);
 
-            currentModel = newModel;
-            mesh = newModel;
+            // currentModel = newModel;
+            // mesh = newModel;
         } catch (IOException e) {
             showError("File Error", "Failed to read file: " + e.getMessage());
         } catch (ObjReaderException e) {
