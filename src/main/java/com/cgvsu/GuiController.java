@@ -551,16 +551,40 @@ public class GuiController {
             boolean removePolygons = !checkboxRemovePolygons.isSelected();
 
             Model resultModel = Eraser.vertexDelete(
-                    mesh,
+                    currentModel,
                     verticesToRemove,
                     createNewModel,
                     removeNormals,
                     removeTextures,
                     removePolygons);
 
-            if (createNewModel) { // I dont quite understand what this crap does, probably it needs implementation
-                                  // of several models (I'll figure it out later)
+            if (createNewModel) {
+
+                float maxX = Float.NEGATIVE_INFINITY;
+                for (Vector3 vertex : currentModel.vertices) {
+                    if (vertex.x() > maxX) {
+                        maxX = vertex.x();
+                    }
+                }
+                
+                float offset = -maxX - 3.0F;
+                for (Vector3 vertex : resultModel.vertices) {
+                    resultModel.vertices.set(
+                        resultModel.vertices.indexOf(vertex),
+                        new Vec3(vertex.x() + offset, vertex.y(), vertex.z())
+                    );
+                }
+
+                models.add(resultModel);
+                listViewModels.setItems(FXCollections.observableArrayList(models));
+                listViewModels.getSelectionModel().select(resultModel);
+            } else {
+                int index = models.indexOf(currentModel);
+                models.set(index, resultModel);
                 mesh = resultModel;
+                currentModel = resultModel;
+                listViewModels.setItems(FXCollections.observableArrayList(models));
+                listViewModels.getSelectionModel().select(index);
             }
 
         } catch (NumberFormatException e) {
