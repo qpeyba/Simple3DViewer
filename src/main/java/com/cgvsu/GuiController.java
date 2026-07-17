@@ -604,7 +604,7 @@ public class GuiController {
     }
 
     private boolean validateVertexIndices(List<Integer> indices) {
-        int maxIndex = mesh.vertices.size() - 1;
+        int maxIndex = currentModel.vertices.size() - 1;
         for (Integer index : indices) {
             if (index < 0 || index > maxIndex) {
                 return false;
